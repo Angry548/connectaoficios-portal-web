@@ -21,6 +21,7 @@ import {
   FlagOutlined,
   GroupsOutlined,
   HandymanOutlined,
+  PeopleAltOutlined,
   PersonOutlineOutlined,
   RefreshOutlined,
   SearchOffOutlined,
@@ -63,27 +64,17 @@ const obtenerMensajeError = (
   }
 
   if (
-    error.response.status === 401
+    error.response.status ===
+    401
   ) {
     return 'La sesión ha expirado. Inicie sesión nuevamente.'
   }
 
   if (
-    error.response.status === 403
+    error.response.status ===
+    403
   ) {
     return 'No tiene permisos para consultar las estadísticas.'
-  }
-
-  if (
-    error.response.status === 404
-  ) {
-    return (
-      error.response.data
-        ?.message ||
-      error.response.data
-        ?.mensaje ||
-      'El recurso de estadísticas todavía no se encuentra disponible.'
-    )
   }
 
   return (
@@ -402,7 +393,7 @@ export default function StatisticsPage() {
             'Servicios publicados en la plataforma.',
 
           icono:
-            <WorkOutlineOutlined />,
+            <WorkOutline />,
         },
 
         {
