@@ -21,7 +21,6 @@ import {
   FlagOutlined,
   GroupsOutlined,
   HandymanOutlined,
-  PeopleAltOutlined,
   PersonOutlineOutlined,
   RefreshOutlined,
   SearchOffOutlined,
@@ -75,6 +74,13 @@ const obtenerMensajeError = (
     403
   ) {
     return 'No tiene permisos para consultar las estadísticas.'
+  }
+
+  if (
+    error.response.status ===
+    404
+  ) {
+    return 'No fue posible encontrar el recurso solicitado.'
   }
 
   return (
@@ -251,9 +257,7 @@ export default function StatisticsPage() {
             respuesta,
           )
         } catch (err) {
-          setEstadisticas(
-            null,
-          )
+          setEstadisticas(null)
 
           setError(
             obtenerMensajeError(
@@ -393,7 +397,7 @@ export default function StatisticsPage() {
             'Servicios publicados en la plataforma.',
 
           icono:
-            <WorkOutline />,
+            <WorkOutlineOutlined />,
         },
 
         {
@@ -762,9 +766,7 @@ export default function StatisticsPage() {
               component="input"
               id="fechaDesde"
               type="date"
-              value={
-                fechaDesde
-              }
+              value={fechaDesde}
               max={hoy}
               onChange={(
                 event,
@@ -820,9 +822,7 @@ export default function StatisticsPage() {
               component="input"
               id="fechaHasta"
               type="date"
-              value={
-                fechaHasta
-              }
+              value={fechaHasta}
               max={hoy}
               onChange={(
                 event,
@@ -959,6 +959,7 @@ export default function StatisticsPage() {
             }}
           >
             Período actual:{' '}
+
             <Box
               component="span"
               sx={{

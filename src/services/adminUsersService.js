@@ -52,12 +52,15 @@ const buscarUsuarios = async (
   const textoLimpio =
     texto?.trim() || ''
 
-  if (textoLimpio.length < 2) {
+  if (
+    textoLimpio.length < 2
+  ) {
     return []
   }
 
   const params = {
-    texto: textoLimpio,
+    texto:
+      textoLimpio,
     limit,
   }
 
@@ -79,12 +82,31 @@ const buscarUsuarios = async (
 
 const obtenerUsuarioPorId =
   async (id) => {
-    const response =
-      await apiDotNet.get(
-        `/api/admin/users/${id}`,
-      )
+    if (
+      id === null ||
+      id === undefined ||
+      id === ''
+    ) {
+      return null
+    }
 
-    return response.data
+    try {
+      const response =
+        await apiDotNet.get(
+          `/api/admin/users/${id}`,
+        )
+
+      return response.data
+    } catch (error) {
+      if (
+        error.response?.status ===
+        404
+      ) {
+        return null
+      }
+
+      throw error
+    }
   }
 
 const cambiarEstado = async (
@@ -95,7 +117,8 @@ const cambiarEstado = async (
     await apiDotNet.patch(
       `/api/admin/users/${id}/status`,
       {
-        estado,
+        estado:
+          Number(estado),
       },
     )
 

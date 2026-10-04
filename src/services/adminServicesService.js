@@ -35,24 +35,41 @@ const normalizarPagina = (
     (
       totalElementos > 0
         ? Math.ceil(
-            totalElementos / tamanio,
+            totalElementos /
+              Math.max(
+                Number(tamanio) ||
+                  tamanioSolicitado,
+                1,
+              ),
           )
         : 0
     )
 
   return {
-    contenido: Array.isArray(contenido)
-      ? contenido
-      : [],
+    contenido:
+      Array.isArray(
+        contenido,
+      )
+        ? contenido
+        : [],
+
     pagina:
-      Number(pagina) || 0,
+      Number(pagina) ||
+      0,
+
     tamanio:
       Number(tamanio) ||
       tamanioSolicitado,
+
     totalElementos:
-      Number(totalElementos) || 0,
+      Number(
+        totalElementos,
+      ) || 0,
+
     totalPaginas:
-      Number(totalPaginas) || 0,
+      Number(
+        totalPaginas,
+      ) || 0,
   }
 }
 
@@ -73,21 +90,31 @@ const obtenerServicios = async ({
     texto?.trim() || ''
 
   if (textoLimpio) {
-    params.texto = textoLimpio
+    params.texto =
+      textoLimpio
   }
 
-  if (trabajadorId) {
+  if (
+    trabajadorId !== null &&
+    trabajadorId !== undefined &&
+    trabajadorId !== ''
+  ) {
     params.trabajadorId =
       Number(trabajadorId)
   }
 
-  if (categoriaId) {
+  if (
+    categoriaId !== null &&
+    categoriaId !== undefined &&
+    categoriaId !== ''
+  ) {
     params.categoriaId =
       Number(categoriaId)
   }
 
   if (estado) {
-    params.estado = estado
+    params.estado =
+      estado
   }
 
   const response =
@@ -107,12 +134,31 @@ const obtenerServicios = async ({
 
 const obtenerServicioPorId =
   async (id) => {
-    const response =
-      await apiJava.get(
-        `/api/admin/servicios/${id}`,
-      )
+    if (
+      id === null ||
+      id === undefined ||
+      id === ''
+    ) {
+      return null
+    }
 
-    return response.data
+    try {
+      const response =
+        await apiJava.get(
+          `/api/admin/servicios/${id}`,
+        )
+
+      return response.data
+    } catch (error) {
+      if (
+        error.response?.status ===
+        404
+      ) {
+        return null
+      }
+
+      throw error
+    }
   }
 
 const buscarCategorias = async (
@@ -142,8 +188,11 @@ const buscarCategorias = async (
       '/api/categorias/buscar',
       {
         params: {
-          texto: textoLimpio,
-          limit: limiteSeguro,
+          texto:
+            textoLimpio,
+
+          limit:
+            limiteSeguro,
         },
       },
     )
