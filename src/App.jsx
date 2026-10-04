@@ -2,16 +2,17 @@ import {
   Navigate,
   Route,
   Routes,
-} from 'react-router-dom';
+} from 'react-router-dom'
 
-import AdminLayout from './components/AdminLayout';
-import ProtectedRoute from './components/ProtectedRoute';
+import AdminLayout from './components/AdminLayout'
+import ProtectedRoute from './components/ProtectedRoute'
 
-import LoginPage from './pages/LoginPage';
-import ChangePasswordPage from './pages/ChangePasswordPage';
-import DashboardPage from './pages/dashboard/DashboardPage';
+import LoginPage from './pages/LoginPage'
+import ChangePasswordPage from './pages/ChangePasswordPage'
+import DashboardPage from './pages/dashboard/DashboardPage'
+import UsersPage from './pages/usuarios/UsersPage'
 
-import './App.css';
+import './App.css'
 
 export default function App() {
   return (
@@ -29,12 +30,23 @@ export default function App() {
         >
           <Route
             path="/dashboard"
-            element={<DashboardPage />}
+            element={
+              <DashboardPage />
+            }
+          />
+
+          <Route
+            path="/usuarios"
+            element={
+              <UsersPage />
+            }
           />
 
           <Route
             path="/cambiar-contrasena"
-            element={<ChangePasswordPage />}
+            element={
+              <ChangePasswordPage />
+            }
           />
         </Route>
       </Route>
@@ -59,5 +71,5 @@ export default function App() {
         }
       />
     </Routes>
-  );
+  )
 }

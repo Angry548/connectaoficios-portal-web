@@ -43,20 +43,31 @@ export default function AdminLayout() {
     cerrarSesion,
   } = useAuth()
 
-  const [mobileOpen, setMobileOpen] =
-    useState(false)
+  const [
+    mobileOpen,
+    setMobileOpen,
+  ] = useState(false)
 
-  const [anchorEl, setAnchorEl] =
-    useState(null)
+  const [
+    anchorEl,
+    setAnchorEl,
+  ] = useState(null)
 
-  const menuAbierto = Boolean(anchorEl)
+  const menuAbierto =
+    Boolean(anchorEl)
 
   const alternarDrawer = () => {
-    setMobileOpen((actual) => !actual)
+    setMobileOpen(
+      (actual) => !actual,
+    )
   }
 
-  const abrirMenuUsuario = (event) => {
-    setAnchorEl(event.currentTarget)
+  const abrirMenuUsuario = (
+    event,
+  ) => {
+    setAnchorEl(
+      event.currentTarget,
+    )
   }
 
   const cerrarMenuUsuario = () => {
@@ -65,11 +76,15 @@ export default function AdminLayout() {
 
   const irCambiarPassword = () => {
     cerrarMenuUsuario()
-    navigate('/cambiar-contrasena')
+
+    navigate(
+      '/cambiar-contrasena',
+    )
   }
 
   const salir = () => {
     cerrarMenuUsuario()
+
     cerrarSesion()
 
     navigate('/login', {
@@ -78,7 +93,8 @@ export default function AdminLayout() {
   }
 
   const obtenerIniciales = () => {
-    const nombre = usuario?.nombre?.trim()
+    const nombre =
+      usuario?.nombre?.trim()
 
     if (!nombre) {
       return 'A'
@@ -104,10 +120,10 @@ export default function AdminLayout() {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#FFFFFF',
+        backgroundColor:
+          '#FFFFFF',
       }}
     >
-      {/* LOGO */}
       <Box
         sx={{
           px: 3,
@@ -122,11 +138,13 @@ export default function AdminLayout() {
             width: 42,
             height: 42,
             borderRadius: 2.5,
-            backgroundColor: '#0D9488',
+            backgroundColor:
+              '#0D9488',
             color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent:
+              'center',
           }}
         >
           <AdminPanelSettingsOutlined />
@@ -158,14 +176,12 @@ export default function AdminLayout() {
 
       <Divider />
 
-      {/* MENÚ PRINCIPAL */}
       <List
         sx={{
           px: 1.5,
           py: 2,
         }}
       >
-        {/* INICIO */}
         <ListItemButton
           component={NavLink}
           to="/dashboard"
@@ -178,13 +194,16 @@ export default function AdminLayout() {
             color: '#475467',
 
             '&.active': {
-              backgroundColor: '#F0FDFA',
+              backgroundColor:
+                '#F0FDFA',
               color: '#0D9488',
             },
 
-            '&.active .MuiListItemIcon-root': {
-              color: '#0D9488',
-            },
+            '&.active .MuiListItemIcon-root':
+              {
+                color:
+                  '#0D9488',
+              },
           }}
         >
           <ListItemIcon
@@ -205,17 +224,34 @@ export default function AdminLayout() {
           />
         </ListItemButton>
 
-        {/* USUARIOS */}
         <ListItemButton
-          disabled
+          component={NavLink}
+          to="/usuarios"
+          onClick={() =>
+            setMobileOpen(false)
+          }
           sx={{
             borderRadius: 2,
             mb: 0.5,
+            color: '#475467',
+
+            '&.active': {
+              backgroundColor:
+                '#F0FDFA',
+              color: '#0D9488',
+            },
+
+            '&.active .MuiListItemIcon-root':
+              {
+                color:
+                  '#0D9488',
+              },
           }}
         >
           <ListItemIcon
             sx={{
               minWidth: 42,
+              color: 'inherit',
             }}
           >
             <PeopleAltOutlined />
@@ -230,7 +266,6 @@ export default function AdminLayout() {
           />
         </ListItemButton>
 
-        {/* ADMINISTRADORES */}
         <ListItemButton
           disabled
           sx={{
@@ -256,14 +291,22 @@ export default function AdminLayout() {
         </ListItemButton>
       </List>
 
-      <Box sx={{ flex: 1 }} />
+      <Box
+        sx={{
+          flex: 1,
+        }}
+      />
 
-      {/* INFORMACIÓN DE CUENTA */}
-      <Box sx={{ p: 2 }}>
+      <Box
+        sx={{
+          p: 2,
+        }}
+      >
         <Box
           sx={{
             borderRadius: 2.5,
-            backgroundColor: '#F8FAFC',
+            backgroundColor:
+              '#F8FAFC',
             p: 2,
           }}
         >
@@ -283,7 +326,8 @@ export default function AdminLayout() {
               color: '#667085',
               mt: 0.4,
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
+              textOverflow:
+                'ellipsis',
             }}
           >
             {usuario?.correo}
@@ -298,10 +342,10 @@ export default function AdminLayout() {
       sx={{
         display: 'flex',
         minHeight: '100vh',
-        backgroundColor: '#F8FAFC',
+        backgroundColor:
+          '#F8FAFC',
       }}
     >
-      {/* SIDEBAR */}
       <Box
         component="nav"
         sx={{
@@ -313,7 +357,6 @@ export default function AdminLayout() {
           },
         }}
       >
-        {/* SIDEBAR MÓVIL */}
         <Drawer
           variant="temporary"
           open={mobileOpen}
@@ -327,16 +370,18 @@ export default function AdminLayout() {
               md: 'none',
             },
 
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-            },
+            '& .MuiDrawer-paper':
+              {
+                width:
+                  drawerWidth,
+                boxSizing:
+                  'border-box',
+              },
           }}
         >
           {drawer}
         </Drawer>
 
-        {/* SIDEBAR ESCRITORIO */}
         <Drawer
           variant="permanent"
           open
@@ -346,56 +391,70 @@ export default function AdminLayout() {
               md: 'block',
             },
 
-            '& .MuiDrawer-paper': {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-              borderRight:
-                '1px solid #EAECF0',
-            },
+            '& .MuiDrawer-paper':
+              {
+                width:
+                  drawerWidth,
+                boxSizing:
+                  'border-box',
+                borderRight:
+                  '1px solid #EAECF0',
+              },
           }}
         >
           {drawer}
         </Drawer>
       </Box>
 
-      {/* CONTENIDO DERECHO */}
       <Box
         sx={{
           flex: 1,
           minWidth: 0,
         }}
       >
-        {/* HEADER */}
         <Box
           component="header"
           sx={{
             height: 76,
+
             px: {
               xs: 2,
               sm: 3,
             },
+
             display: 'flex',
-            alignItems: 'center',
+
+            alignItems:
+              'center',
+
             justifyContent:
               'space-between',
-            backgroundColor: '#FFFFFF',
+
+            backgroundColor:
+              '#FFFFFF',
+
             borderBottom:
               '1px solid #EAECF0',
+
             position: 'sticky',
+
             top: 0,
+
             zIndex: 1000,
           }}
         >
-          {/* PARTE IZQUIERDA */}
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems:
+                'center',
               gap: 1,
             }}
           >
             <IconButton
-              onClick={alternarDrawer}
+              onClick={
+                alternarDrawer
+              }
               sx={{
                 display: {
                   md: 'none',
@@ -419,11 +478,11 @@ export default function AdminLayout() {
             </Typography>
           </Box>
 
-          {/* PARTE DERECHA */}
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems:
+                'center',
               gap: 1.5,
             }}
           >
@@ -433,14 +492,17 @@ export default function AdminLayout() {
                   xs: 'none',
                   sm: 'block',
                 },
-                textAlign: 'right',
+
+                textAlign:
+                  'right',
               }}
             >
               <Typography
                 sx={{
                   fontSize: 14,
                   fontWeight: 700,
-                  color: '#344054',
+                  color:
+                    '#344054',
                 }}
               >
                 {usuario?.nombre}
@@ -449,7 +511,8 @@ export default function AdminLayout() {
               <Typography
                 sx={{
                   fontSize: 12,
-                  color: '#667085',
+                  color:
+                    '#667085',
                 }}
               >
                 {usuario?.rol}
@@ -469,10 +532,14 @@ export default function AdminLayout() {
                   sx={{
                     width: 42,
                     height: 42,
+
                     backgroundColor:
                       '#0D9488',
+
                     fontSize: 14,
-                    fontWeight: 700,
+
+                    fontWeight:
+                      700,
                   }}
                 >
                   {obtenerIniciales()}
@@ -480,18 +547,22 @@ export default function AdminLayout() {
               </IconButton>
             </Tooltip>
 
-            {/* MENÚ USUARIO */}
             <Menu
               anchorEl={anchorEl}
               open={menuAbierto}
-              onClose={cerrarMenuUsuario}
+              onClose={
+                cerrarMenuUsuario
+              }
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
+                vertical:
+                  'bottom',
+                horizontal:
+                  'right',
               }}
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal:
+                  'right',
               }}
             >
               <MenuItem
@@ -521,7 +592,6 @@ export default function AdminLayout() {
           </Box>
         </Box>
 
-        {/* CONTENIDO DE LAS PÁGINAS */}
         <Box
           component="main"
           sx={{
