@@ -9,8 +9,11 @@ import ProtectedRoute from './components/ProtectedRoute'
 
 import LoginPage from './pages/LoginPage'
 import ChangePasswordPage from './pages/ChangePasswordPage'
+
 import DashboardPage from './pages/dashboard/DashboardPage'
 import UsersPage from './pages/usuarios/UsersPage'
+import ServicesPage from './pages/servicios/ServicesPage'
+import ReportsPage from './pages/reportes/ReportsPage'
 
 import './App.css'
 
@@ -19,14 +22,20 @@ export default function App() {
     <Routes>
       <Route
         path="/login"
-        element={<LoginPage />}
+        element={
+          <LoginPage />
+        }
       />
 
       <Route
-        element={<ProtectedRoute />}
+        element={
+          <ProtectedRoute />
+        }
       >
         <Route
-          element={<AdminLayout />}
+          element={
+            <AdminLayout />
+          }
         >
           <Route
             path="/dashboard"
@@ -39,6 +48,20 @@ export default function App() {
             path="/usuarios"
             element={
               <UsersPage />
+            }
+          />
+
+          <Route
+            path="/servicios"
+            element={
+              <ServicesPage />
+            }
+          />
+
+          <Route
+            path="/reportes"
+            element={
+              <ReportsPage />
             }
           />
 
