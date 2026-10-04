@@ -94,13 +94,15 @@ export default function AdminLayout() {
 
   const alternarDrawer = () => {
     setMobileOpen(
-      (actual) => !actual,
+      (actual) =>
+        !actual,
     )
   }
 
-  const cerrarDrawerMovil = () => {
-    setMobileOpen(false)
-  }
+  const cerrarDrawerMovil =
+    () => {
+      setMobileOpen(false)
+    }
 
   const abrirMenuUsuario = (
     event,
@@ -245,8 +247,7 @@ export default function AdminLayout() {
         <Box>
           <Typography
             sx={{
-              fontWeight:
-                800,
+              fontWeight: 800,
               fontSize: 18,
               color:
                 '#101828',
@@ -311,37 +312,13 @@ export default function AdminLayout() {
         />
 
         {esAdministradorPrincipal && (
-          <ListItemButton
-            disabled
-            sx={{
-              borderRadius:
-                2,
-              mb: 0.5,
-              minHeight:
-                48,
-              px: 2,
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth:
-                  42,
-              }}
-            >
+          <OpcionMenu
+            to="/administradores"
+            texto="Administradores"
+            icono={
               <AdminPanelSettingsOutlined />
-            </ListItemIcon>
-
-            <Typography
-              sx={{
-                fontSize:
-                  14,
-                fontWeight:
-                  600,
-              }}
-            >
-              Administradores
-            </Typography>
-          </ListItemButton>
+            }
+          />
         )}
       </List>
 
@@ -368,13 +345,15 @@ export default function AdminLayout() {
           <Typography
             sx={{
               fontSize: 13,
-              fontWeight:
-                700,
+              fontWeight: 700,
               color:
                 '#344054',
             }}
           >
-            {usuario?.rol}
+            {usuario?.rol ===
+            'AdministradorPrincipal'
+              ? 'Administrador Principal'
+              : usuario?.rol}
           </Typography>
 
           <Typography
@@ -432,10 +411,8 @@ export default function AdminLayout() {
           }}
           sx={{
             display: {
-              xs:
-                'block',
-              md:
-                'none',
+              xs: 'block',
+              md: 'none',
             },
 
             '& .MuiDrawer-paper':
@@ -505,8 +482,7 @@ export default function AdminLayout() {
         >
           <Box
             sx={{
-              display:
-                'flex',
+              display: 'flex',
               alignItems:
                 'center',
               gap: 1.5,
@@ -520,7 +496,8 @@ export default function AdminLayout() {
                 display: {
                   xs:
                     'inline-flex',
-                  md: 'none',
+                  md:
+                    'none',
                 },
               }}
             >
@@ -533,8 +510,7 @@ export default function AdminLayout() {
                   xs: 18,
                   sm: 20,
                 },
-                fontWeight:
-                  800,
+                fontWeight: 800,
                 color:
                   '#101828',
               }}
@@ -545,8 +521,7 @@ export default function AdminLayout() {
 
           <Box
             sx={{
-              display:
-                'flex',
+              display: 'flex',
               alignItems:
                 'center',
               gap: 1.5,
@@ -564,10 +539,8 @@ export default function AdminLayout() {
             >
               <Typography
                 sx={{
-                  fontSize:
-                    13,
-                  fontWeight:
-                    700,
+                  fontSize: 13,
+                  fontWeight: 700,
                   color:
                     '#344054',
                 }}
@@ -577,13 +550,15 @@ export default function AdminLayout() {
 
               <Typography
                 sx={{
-                  fontSize:
-                    12,
+                  fontSize: 12,
                   color:
                     '#667085',
                 }}
               >
-                {usuario?.rol}
+                {usuario?.rol ===
+                'AdministradorPrincipal'
+                  ? 'Administrador Principal'
+                  : usuario?.rol}
               </Typography>
             </Box>
 
@@ -602,10 +577,8 @@ export default function AdminLayout() {
                     height: 42,
                     backgroundColor:
                       '#0D9488',
-                    fontSize:
-                      14,
-                    fontWeight:
-                      700,
+                    fontSize: 14,
+                    fontWeight: 700,
                   }}
                 >
                   {obtenerIniciales()}
@@ -636,19 +609,6 @@ export default function AdminLayout() {
                   'right',
               }}
             >
-              <MenuItem
-                onClick={
-                  irCambiarPassword
-                }
-              >
-                <ListItemIcon>
-                  <AccountCircleOutlined
-                    fontSize="small"
-                  />
-                </ListItemIcon>
-
-                Mi cuenta
-              </MenuItem>
 
               <MenuItem
                 onClick={

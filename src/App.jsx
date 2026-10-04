@@ -6,6 +6,7 @@ import {
 
 import AdminLayout from './components/AdminLayout'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdminPrincipalRoute from './components/AdminPrincipalRoute'
 
 import LoginPage from './pages/LoginPage'
 import ChangePasswordPage from './pages/ChangePasswordPage'
@@ -14,6 +15,7 @@ import DashboardPage from './pages/dashboard/DashboardPage'
 import UsersPage from './pages/usuarios/UsersPage'
 import ServicesPage from './pages/servicios/ServicesPage'
 import ReportsPage from './pages/reportes/ReportsPage'
+import AdministratorsPage from './pages/administradores/AdministratorsPage'
 
 import './App.css'
 
@@ -64,6 +66,19 @@ export default function App() {
               <ReportsPage />
             }
           />
+
+          <Route
+            element={
+              <AdminPrincipalRoute />
+            }
+          >
+            <Route
+              path="/administradores"
+              element={
+                <AdministratorsPage />
+              }
+            />
+          </Route>
 
           <Route
             path="/cambiar-contrasena"
