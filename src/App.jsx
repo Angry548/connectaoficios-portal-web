@@ -15,6 +15,7 @@ import DashboardPage from './pages/dashboard/DashboardPage'
 import UsersPage from './pages/usuarios/UsersPage'
 import ServicesPage from './pages/servicios/ServicesPage'
 import ReportsPage from './pages/reportes/ReportsPage'
+import StatisticsPage from './pages/estadisticas/StatisticsPage'
 import AdministratorsPage from './pages/administradores/AdministratorsPage'
 
 import './App.css'
@@ -64,6 +65,13 @@ export default function App() {
             path="/reportes"
             element={
               <ReportsPage />
+            }
+          />
+
+          <Route
+            path="/estadisticas"
+            element={
+              <StatisticsPage />
             }
           />
 

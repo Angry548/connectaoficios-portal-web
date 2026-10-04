@@ -18,8 +18,8 @@ import {
 } from '@mui/material'
 
 import {
-  AccountCircleOutlined,
   AdminPanelSettingsOutlined,
+  AssessmentOutlined,
   DashboardOutlined,
   FlagOutlined,
   LogoutOutlined,
@@ -308,6 +308,14 @@ export default function AdminLayout() {
           texto="Reportes"
           icono={
             <FlagOutlined />
+          }
+        />
+
+        <OpcionMenu
+          to="/estadisticas"
+          texto="Estadísticas"
+          icono={
+            <AssessmentOutlined />
           }
         />
 
@@ -609,7 +617,6 @@ export default function AdminLayout() {
                   'right',
               }}
             >
-
               <MenuItem
                 onClick={
                   irCambiarPassword
