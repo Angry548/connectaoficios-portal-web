@@ -1,3 +1,4 @@
+import getApiErrorMessage from '../utils/getApiErrorMessage'
 import { useState } from 'react'
 
 import {
@@ -147,44 +148,7 @@ export default function LoginPage() {
       navigate('/dashboard', {
         replace: true,
       })
-    } catch (err) {
-      console.error(
-        'Error al iniciar sesión:',
-        err,
-      )
-
-      if (!err.response) {
-        setErrorGeneral(
-          'No fue posible conectar con el servidor. Verifique la conexión o la configuración CORS de la API.',
-        )
-      } else if (
-        err.response.status === 400
-      ) {
-        setErrorGeneral(
-          err.response.data?.message ||
-            'Verifique los datos ingresados.',
-        )
-      } else if (
-        err.response.status === 401
-      ) {
-        setErrorGeneral(
-          err.response.data?.message ||
-            'Correo o contraseña incorrectos.',
-        )
-      } else if (
-        err.response.status === 403
-      ) {
-        setErrorGeneral(
-          err.response.data?.message ||
-            'Acceso no autorizado. Esta cuenta no posee permisos administrativos.',
-        )
-      } else {
-        setErrorGeneral(
-          err.response.data?.message ||
-            'No fue posible iniciar sesión.',
-        )
-      }
-    } finally {
+    } catch (err) { setErrorGeneral(getApiErrorMessage(err, { unauthorized: 'Correo o contrase\u00f1a incorrectos.' })) } finally {
       setEnviando(false)
     }
   }

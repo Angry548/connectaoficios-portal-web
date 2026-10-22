@@ -1,37 +1,17 @@
+import ConfirmActionDialog from '../../components/ConfirmActionDialog'
+import AdminDialog from '../../components/AdminDialog'
+import RowActionsMenu from '../../components/RowActionsMenu'
+import AdminTableCard from '../../components/AdminTableCard'
+import AdminFilterCard from '../../components/AdminFilterCard'
+import AdminPageHeader from '../../components/AdminPageHeader'
+import obtenerMensajeError from '../../utils/getApiErrorMessage'
 import {
   useCallback,
   useEffect,
   useState,
 } from 'react'
 
-import {
-  Alert,
-  Autocomplete,
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Alert, Autocomplete, Box, Button, Chip, CircularProgress, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material"
 
 import {
   SettingsOutlined,
@@ -40,45 +20,7 @@ import {
 import adminServicesService from '../../services/adminServicesService'
 import adminUsersService from '../../services/adminUsersService'
 
-const obtenerMensajeError = (
-  error,
-) => {
-  if (!error.response) {
-    return 'No fue posible conectar con el servidor.'
-  }
 
-  if (
-    error.response.status === 401
-  ) {
-    return 'La sesión ha expirado. Inicie sesión nuevamente.'
-  }
-
-  if (
-    error.response.status === 403
-  ) {
-    return 'No tiene permisos para realizar esta operación.'
-  }
-
-  if (
-    error.response.status === 404
-  ) {
-    return (
-      error.response.data
-        ?.mensaje ||
-      error.response.data
-        ?.message ||
-      'El recurso solicitado no existe.'
-    )
-  }
-
-  return (
-    error.response.data
-      ?.mensaje ||
-    error.response.data
-      ?.message ||
-    'Ocurrió un error al procesar la solicitud.'
-  )
-}
 
 const formatearPrecio = (
   valor,
@@ -314,6 +256,8 @@ export default function ServicesPage() {
     if (
       textoLimpio.length < 2
     ) {
+      // Clear dependent suggestions when the search is below its minimum length.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTrabajadoresOpciones(
         [],
       )
@@ -375,6 +319,8 @@ export default function ServicesPage() {
     if (
       textoLimpio.length < 2
     ) {
+      // Clear dependent suggestions when the search is below its minimum length.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCategoriasOpciones(
         [],
       )
@@ -547,6 +493,8 @@ export default function ServicesPage() {
     )
 
   useEffect(() => {
+    // Synchronize the existing API query with its current filters and page.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargarServicios()
   }, [cargarServicios])
 
@@ -835,86 +783,9 @@ export default function ServicesPage() {
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: {
-            xs: 'flex-start',
-            sm: 'center',
-          },
-          justifyContent:
-            'space-between',
-          flexDirection: {
-            xs: 'column',
-            sm: 'row',
-          },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <Box>
-          <Typography
-            component="h1"
-            sx={{
-              fontSize: {
-                xs: 25,
-                sm: 30,
-              },
-              fontWeight:
-                800,
-              color:
-                '#101828',
-            }}
-          >
-            Gestión de servicios
-          </Typography>
+      <AdminPageHeader title="Gestión de servicios" description="Supervisa los servicios publicados por los trabajadores." icon={<SettingsOutlined />}  />
 
-          <Typography
-            sx={{
-              color:
-                '#667085',
-              fontSize: 15,
-              mt: 0.7,
-            }}
-          >
-            Supervisa los servicios publicados por los trabajadores.
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            width: 52,
-            height: 52,
-            borderRadius: 2.5,
-            backgroundColor:
-              '#F0FDFA',
-            color:
-              '#0D9488',
-            display:
-              'flex',
-            alignItems:
-              'center',
-            justifyContent:
-              'center',
-          }}
-        >
-          <SettingsOutlined />
-        </Box>
-      </Box>
-
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          p: {
-            xs: 2,
-            sm: 3,
-          },
-          mb: 3,
-        }}
-      >
+      <AdminFilterCard>
         <Typography
           sx={{
             fontSize: 16,
@@ -1272,7 +1143,7 @@ export default function ServicesPage() {
             </Button>
           </Box>
         </Box>
-      </Paper>
+      </AdminFilterCard>
 
       {error && (
         <Alert
@@ -1283,21 +1154,12 @@ export default function ServicesPage() {
           sx={{
             mb: 3,
           }}
-        >
+         action={<Button disabled={cargando} onClick={cargarServicios}>Reintentar</Button>}>
           {error}
         </Alert>
       )}
 
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          overflow:
-            'hidden',
-        }}
-      >
+      <AdminTableCard>
         <Box
           sx={{
             px: {
@@ -1620,69 +1482,10 @@ export default function ServicesPage() {
                             />
                           </TableCell>
 
-                          <TableCell
-                            align="center"
-                            sx={{
-                              width:
-                                220,
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                display:
-                                  'flex',
-                                justifyContent:
-                                  'center',
-                                alignItems:
-                                  'center',
-                                gap: 1,
-                              }}
-                            >
-                              <Button
-                                size="small"
-                                onClick={() =>
-                                  abrirDetalle(
-                                    servicio,
-                                  )
-                                }
-                                sx={{
-                                  textTransform:
-                                    'none',
-                                  fontWeight:
-                                    700,
-                                  color:
-                                    '#0D9488',
-                                }}
-                              >
-                                Ver
-                              </Button>
-
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                color={
-                                  activo
-                                    ? 'error'
-                                    : 'success'
-                                }
-                                onClick={() =>
-                                  solicitarCambioEstado(
-                                    servicio,
-                                  )
-                                }
-                                sx={{
-                                  textTransform:
-                                    'none',
-                                  fontWeight:
-                                    700,
-                                }}
-                              >
-                                {activo
-                                  ? 'Desactivar'
-                                  : 'Activar'}
-                              </Button>
-                            </Box>
-                          </TableCell>
+                          <TableCell align="center"><RowActionsMenu label={`Acciones del servicio #${servicio.id}`} actions={[
+ { label: 'Ver detalle', onClick: () => abrirDetalle(servicio) },
+ { label: activo ? 'Desactivar' : 'Activar', onClick: () => solicitarCambioEstado(servicio) },
+ ]} /></TableCell>
                         </TableRow>
                       )
                     },
@@ -1729,9 +1532,9 @@ export default function ServicesPage() {
             />
           </>
         )}
-      </Paper>
+      </AdminTableCard>
 
-      <Dialog
+      <AdminDialog
         open={
           detalleAbierto
         }
@@ -2256,7 +2059,7 @@ export default function ServicesPage() {
             p: 2,
           }}
         >
-          <Button
+          <Button variant="outlined"
             onClick={
               cerrarDetalle
             }
@@ -2272,125 +2075,21 @@ export default function ServicesPage() {
             Cerrar
           </Button>
         </DialogActions>
-      </Dialog>
+      </AdminDialog>
 
-      <Dialog
-        open={
-          confirmacionAbierta
-        }
-        onClose={
-          cerrarConfirmacion
-        }
-        fullWidth
-        maxWidth="xs"
-      >
-        <DialogTitle
-          sx={{
-            fontWeight:
-              800,
-            color:
-              '#101828',
-          }}
-        >
-          {obtenerEstado(
+      <ConfirmActionDialog open={confirmacionAbierta} title={<>{obtenerEstado(
             servicioCambioEstado
               ?.estado,
           ) === 'ACTIVO'
             ? 'Desactivar servicio'
-            : 'Activar servicio'}
-        </DialogTitle>
-
-        <DialogContent>
-          <Typography
-            sx={{
-              color:
-                '#475467',
-              lineHeight:
-                1.7,
-            }}
-          >
+            : 'Activar servicio'}</>} busy={cambiandoEstado} onClose={cerrarConfirmacion} onConfirm={confirmarCambioEstado} confirmLabel={obtenerEstado(servicioCambioEstado?.estado) === 'ACTIVO' ? 'Desactivar' : 'Activar'} color={obtenerEstado(servicioCambioEstado?.estado) === 'ACTIVO' ? 'warning' : 'success'}>
             {obtenerEstado(
               servicioCambioEstado
                 ?.estado,
             ) === 'ACTIVO'
               ? `¿Está seguro de que desea desactivar "${servicioCambioEstado?.titulo}"? El servicio dejará de estar disponible para los clientes.`
               : `¿Está seguro de que desea activar nuevamente "${servicioCambioEstado?.titulo}"?`}
-          </Typography>
-        </DialogContent>
-
-        <DialogActions
-          sx={{
-            p: 2,
-          }}
-        >
-          <Button
-            onClick={
-              cerrarConfirmacion
-            }
-            disabled={
-              cambiandoEstado
-            }
-            sx={{
-              textTransform:
-                'none',
-              fontWeight:
-                700,
-              color:
-                '#475467',
-            }}
-          >
-            Cancelar
-          </Button>
-
-          <Button
-            variant="contained"
-            color={
-              obtenerEstado(
-                servicioCambioEstado
-                  ?.estado,
-              ) === 'ACTIVO'
-                ? 'error'
-                : 'success'
-            }
-            onClick={
-              confirmarCambioEstado
-            }
-            disabled={
-              cambiandoEstado
-            }
-            sx={{
-              minWidth:
-                120,
-              minHeight:
-                40,
-              textTransform:
-                'none',
-              fontWeight:
-                700,
-              boxShadow:
-                'none',
-            }}
-          >
-            {cambiandoEstado ? (
-              <CircularProgress
-                size={20}
-                sx={{
-                  color:
-                    '#FFFFFF',
-                }}
-              />
-            ) : obtenerEstado(
-                servicioCambioEstado
-                  ?.estado,
-              ) ===
-              'ACTIVO' ? (
-              'Desactivar'
-            ) : (
-              'Activar'
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </ConfirmActionDialog>
 
       <Snackbar
         open={

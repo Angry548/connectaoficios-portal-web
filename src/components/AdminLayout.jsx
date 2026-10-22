@@ -25,6 +25,7 @@ import {
   LogoutOutlined,
   Menu as MenuIcon,
   PeopleAltOutlined,
+  LocalOfferOutlined,
   SettingsOutlined,
 } from '@mui/icons-material'
 
@@ -65,6 +66,44 @@ const estiloOpcion = {
       '#F8FAFC',
   },
 }
+
+const OpcionMenu = ({
+    to,
+    icono,
+    texto,
+    onClose,
+  }) => (
+    <ListItemButton
+      component={NavLink}
+      to={to}
+      onClick={
+        onClose
+      }
+      sx={
+        estiloOpcion
+      }
+    >
+      <ListItemIcon
+        sx={{
+          minWidth: 42,
+          color:
+            'inherit',
+        }}
+      >
+        {icono}
+      </ListItemIcon>
+
+      <Typography
+        sx={{
+          fontSize: 14,
+          fontWeight: 600,
+        }}
+      >
+        {texto}
+      </Typography>
+    </ListItemButton>
+  )
+
 
 export default function AdminLayout() {
   const navigate =
@@ -168,41 +207,6 @@ export default function AdminLayout() {
         .toUpperCase()
     }
 
-  const OpcionMenu = ({
-    to,
-    icono,
-    texto,
-  }) => (
-    <ListItemButton
-      component={NavLink}
-      to={to}
-      onClick={
-        cerrarDrawerMovil
-      }
-      sx={
-        estiloOpcion
-      }
-    >
-      <ListItemIcon
-        sx={{
-          minWidth: 42,
-          color:
-            'inherit',
-        }}
-      >
-        {icono}
-      </ListItemIcon>
-
-      <Typography
-        sx={{
-          fontSize: 14,
-          fontWeight: 600,
-        }}
-      >
-        {texto}
-      </Typography>
-    </ListItemButton>
-  )
 
   const drawer = (
     <Box
@@ -279,7 +283,7 @@ export default function AdminLayout() {
           py: 2,
         }}
       >
-        <OpcionMenu
+        <OpcionMenu onClose={cerrarDrawerMovil}
           to="/dashboard"
           texto="Inicio"
           icono={
@@ -287,7 +291,7 @@ export default function AdminLayout() {
           }
         />
 
-        <OpcionMenu
+        <OpcionMenu onClose={cerrarDrawerMovil}
           to="/usuarios"
           texto="Usuarios"
           icono={
@@ -295,7 +299,7 @@ export default function AdminLayout() {
           }
         />
 
-        <OpcionMenu
+        <OpcionMenu onClose={cerrarDrawerMovil}
           to="/servicios"
           texto="Servicios"
           icono={
@@ -303,7 +307,11 @@ export default function AdminLayout() {
           }
         />
 
-        <OpcionMenu
+        {['Administrador', 'AdministradorPrincipal'].includes(usuario?.rol) && (
+          <OpcionMenu onClose={cerrarDrawerMovil} to="/promociones" texto="Promociones" icono={<LocalOfferOutlined />} />
+        )}
+
+        <OpcionMenu onClose={cerrarDrawerMovil}
           to="/reportes"
           texto="Reportes"
           icono={
@@ -311,7 +319,7 @@ export default function AdminLayout() {
           }
         />
 
-        <OpcionMenu
+        <OpcionMenu onClose={cerrarDrawerMovil}
           to="/estadisticas"
           texto="Estadísticas"
           icono={
@@ -320,7 +328,7 @@ export default function AdminLayout() {
         />
 
         {esAdministradorPrincipal && (
-          <OpcionMenu
+          <OpcionMenu onClose={cerrarDrawerMovil}
             to="/administradores"
             texto="Administradores"
             icono={

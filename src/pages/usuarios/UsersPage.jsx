@@ -1,36 +1,17 @@
+import ConfirmActionDialog from '../../components/ConfirmActionDialog'
+import AdminDialog from '../../components/AdminDialog'
+import RowActionsMenu from '../../components/RowActionsMenu'
+import AdminTableCard from '../../components/AdminTableCard'
+import AdminFilterCard from '../../components/AdminFilterCard'
+import AdminPageHeader from '../../components/AdminPageHeader'
+import obtenerMensajeError from '../../utils/getApiErrorMessage'
 import {
   useCallback,
   useEffect,
   useState,
 } from 'react'
 
-import {
-  Alert,
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Snackbar,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Alert, Box, Button, Chip, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material"
 
 import {
   PeopleAltOutlined,
@@ -38,31 +19,7 @@ import {
 
 import adminUsersService from '../../services/adminUsersService'
 
-const obtenerMensajeError = (error) => {
-  if (!error.response) {
-    return 'No fue posible conectar con el servidor.'
-  }
 
-  if (error.response.status === 401) {
-    return 'La sesión ha expirado. Inicie sesión nuevamente.'
-  }
-
-  if (error.response.status === 403) {
-    return 'No tiene permisos para realizar esta operación.'
-  }
-
-  if (error.response.status === 404) {
-    return (
-      error.response.data?.message ||
-      'El usuario solicitado no existe.'
-    )
-  }
-
-  return (
-    error.response.data?.message ||
-    'Ocurrió un error al procesar la solicitud.'
-  )
-}
 
 const obtenerColorEstado = (estado) => {
   if (estado === 'Activo') {
@@ -209,6 +166,8 @@ export default function UsersPage() {
     ])
 
   useEffect(() => {
+    // Synchronize the existing API query with its current filters and page.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargarUsuarios()
   }, [cargarUsuarios])
 
@@ -362,81 +321,9 @@ export default function UsersPage() {
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: {
-            xs: 'flex-start',
-            sm: 'center',
-          },
-          justifyContent:
-            'space-between',
-          flexDirection: {
-            xs: 'column',
-            sm: 'row',
-          },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <Box>
-          <Typography
-            component="h1"
-            sx={{
-              fontSize: {
-                xs: 25,
-                sm: 30,
-              },
-              fontWeight: 800,
-              color: '#101828',
-            }}
-          >
-            Gestión de usuarios
-          </Typography>
+      <AdminPageHeader title="Gestión de usuarios" description="Consulta y administra las cuentas de clientes y trabajadores registrados." icon={<PeopleAltOutlined />}  />
 
-          <Typography
-            sx={{
-              color: '#667085',
-              fontSize: 15,
-              mt: 0.7,
-            }}
-          >
-            Consulta y administra las
-            cuentas de clientes y
-            trabajadores registrados.
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            width: 52,
-            height: 52,
-            borderRadius: 2.5,
-            backgroundColor:
-              '#F0FDFA',
-            color: '#0D9488',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <PeopleAltOutlined />
-        </Box>
-      </Box>
-
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          p: {
-            xs: 2,
-            sm: 3,
-          },
-          mb: 3,
-        }}
-      >
+      <AdminFilterCard>
         <Typography
           sx={{
             fontSize: 16,
@@ -613,7 +500,7 @@ export default function UsersPage() {
             </Button>
           </Stack>
         </Box>
-      </Paper>
+      </AdminFilterCard>
 
       {error && (
         <Alert
@@ -624,20 +511,12 @@ export default function UsersPage() {
           sx={{
             mb: 3,
           }}
-        >
+         action={<Button disabled={cargando} onClick={cargarUsuarios}>Reintentar</Button>}>
           {error}
         </Alert>
       )}
 
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          overflow: 'hidden',
-        }}
-      >
+      <AdminTableCard>
         <Box
           sx={{
             px: {
@@ -879,65 +758,10 @@ export default function UsersPage() {
                           />
                         </TableCell>
 
-                        <TableCell
-                          align="center"
-                          sx={{
-                            width: 230,
-                          }}
-                        >
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            justifyContent="center"
-                            alignItems="center"
-                          >
-                            <Button
-                              size="small"
-                              onClick={() =>
-                                abrirDetalle(
-                                  usuario,
-                                )
-                              }
-                              sx={{
-                                textTransform:
-                                  'none',
-                                fontWeight:
-                                  700,
-                                color:
-                                  '#0D9488',
-                              }}
-                            >
-                              Ver
-                            </Button>
-
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              color={
-                                usuario.estado ===
-                                'Activo'
-                                  ? 'error'
-                                  : 'success'
-                              }
-                              onClick={() =>
-                                solicitarCambioEstado(
-                                  usuario,
-                                )
-                              }
-                              sx={{
-                                textTransform:
-                                  'none',
-                                fontWeight:
-                                  700,
-                              }}
-                            >
-                              {usuario.estado ===
-                              'Activo'
-                                ? 'Desactivar'
-                                : 'Activar'}
-                            </Button>
-                          </Stack>
-                        </TableCell>
+                        <TableCell align="center"><RowActionsMenu label={`Acciones del usuario #${usuario.id}`} actions={[
+ { label: 'Ver detalle', onClick: () => abrirDetalle(usuario) },
+ { label: usuario.estado === 'Activo' ? 'Desactivar' : 'Activar', onClick: () => solicitarCambioEstado(usuario) },
+ ]} /></TableCell>
                       </TableRow>
                     ),
                   )}
@@ -979,9 +803,9 @@ export default function UsersPage() {
             />
           </>
         )}
-      </Paper>
+      </AdminTableCard>
 
-      <Dialog
+      <AdminDialog
         open={detalleAbierto}
         onClose={cerrarDetalle}
         fullWidth
@@ -1012,12 +836,7 @@ export default function UsersPage() {
             </Box>
           ) : (
             usuarioDetalle && (
-              <Stack
-                spacing={2.5}
-                sx={{
-                  py: 1,
-                }}
-              >
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 2.5, '& > :first-child': { gridColumn: '1 / -1' } }}>
                 <Box>
                   <Typography
                     sx={{
@@ -1191,7 +1010,7 @@ export default function UsersPage() {
                     )}
                   </Typography>
                 </Box>
-              </Stack>
+              </Box>
             )
           )}
         </DialogContent>
@@ -1201,7 +1020,7 @@ export default function UsersPage() {
             p: 2,
           }}
         >
-          <Button
+          <Button variant="outlined"
             onClick={cerrarDetalle}
             sx={{
               textTransform: 'none',
@@ -1212,101 +1031,17 @@ export default function UsersPage() {
             Cerrar
           </Button>
         </DialogActions>
-      </Dialog>
+      </AdminDialog>
 
-      <Dialog
-        open={confirmacionAbierta}
-        onClose={
-          cerrarConfirmacion
-        }
-        fullWidth
-        maxWidth="xs"
-      >
-        <DialogTitle
-          sx={{
-            fontWeight: 800,
-            color: '#101828',
-          }}
-        >
-          {usuarioCambioEstado?.estado ===
+      <ConfirmActionDialog open={confirmacionAbierta} title={<>{usuarioCambioEstado?.estado ===
           'Activo'
             ? 'Desactivar usuario'
-            : 'Activar usuario'}
-        </DialogTitle>
-
-        <DialogContent>
-          <Typography
-            sx={{
-              color: '#475467',
-              lineHeight: 1.7,
-            }}
-          >
+            : 'Activar usuario'}</>} busy={cambiandoEstado} onClose={cerrarConfirmacion} onConfirm={confirmarCambioEstado} confirmLabel={usuarioCambioEstado?.estado === 'Activo' ? 'Desactivar' : 'Activar'} color={usuarioCambioEstado?.estado === 'Activo' ? 'warning' : 'success'}>
             {usuarioCambioEstado?.estado ===
             'Activo'
               ? `¿Está seguro de que desea desactivar la cuenta de ${usuarioCambioEstado?.nombre}? El usuario dejará de tener acceso a las funcionalidades protegidas de la plataforma.`
               : `¿Está seguro de que desea activar nuevamente la cuenta de ${usuarioCambioEstado?.nombre}?`}
-          </Typography>
-        </DialogContent>
-
-        <DialogActions
-          sx={{
-            p: 2,
-          }}
-        >
-          <Button
-            onClick={
-              cerrarConfirmacion
-            }
-            disabled={
-              cambiandoEstado
-            }
-            sx={{
-              textTransform: 'none',
-              fontWeight: 700,
-              color: '#475467',
-            }}
-          >
-            Cancelar
-          </Button>
-
-          <Button
-            variant="contained"
-            color={
-              usuarioCambioEstado?.estado ===
-              'Activo'
-                ? 'error'
-                : 'success'
-            }
-            onClick={
-              confirmarCambioEstado
-            }
-            disabled={
-              cambiandoEstado
-            }
-            sx={{
-              minWidth: 120,
-              minHeight: 40,
-              textTransform: 'none',
-              fontWeight: 700,
-              boxShadow: 'none',
-            }}
-          >
-            {cambiandoEstado ? (
-              <CircularProgress
-                size={20}
-                sx={{
-                  color: '#FFFFFF',
-                }}
-              />
-            ) : usuarioCambioEstado?.estado ===
-              'Activo' ? (
-              'Desactivar'
-            ) : (
-              'Activar'
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </ConfirmActionDialog>
 
       <Snackbar
         open={Boolean(mensaje)}

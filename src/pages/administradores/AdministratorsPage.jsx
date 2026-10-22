@@ -1,121 +1,24 @@
+import ConfirmActionDialog from '../../components/ConfirmActionDialog'
+import AdminDialog from '../../components/AdminDialog'
+import RowActionsMenu from '../../components/RowActionsMenu'
+import AdminTableCard from '../../components/AdminTableCard'
+import AdminFilterCard from '../../components/AdminFilterCard'
+import AdminPageHeader from '../../components/AdminPageHeader'
+import obtenerMensajeError from '../../utils/getApiErrorMessage'
 import {
   useCallback,
   useEffect,
   useState,
 } from 'react'
 
-import {
-  Alert,
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  Menu,
-  MenuItem,
-  Paper,
-  Select,
-  Snackbar,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@mui/material'
+import { Alert, Box, Button, Chip, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material"
 
-import {
-  AddOutlined,
-  AdminPanelSettingsOutlined,
-  DeleteOutlineOutlined,
-  EditOutlined,
-  MoreVertOutlined,
-  PersonOffOutlined,
-  PersonOutlineOutlined,
-  VisibilityOffOutlined,
-  VisibilityOutlined,
-} from '@mui/icons-material'
+import { AddOutlined, AdminPanelSettingsOutlined, PersonOutlineOutlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material"
 
 import adminAccountsService from '../../services/adminAccountsService'
 import { useAuth } from '../../context/AuthContext'
 
-const obtenerMensajeError = (
-  error,
-) => {
-  if (!error?.response) {
-    return (
-      error?.message ||
-      'No fue posible conectar con el servidor.'
-    )
-  }
 
-  const mensaje =
-    error.response.data
-      ?.message ||
-    error.response.data
-      ?.mensaje
-
-  if (
-    error.response.status ===
-    400
-  ) {
-    return (
-      mensaje ||
-      'Verifique los datos ingresados.'
-    )
-  }
-
-  if (
-    error.response.status ===
-    401
-  ) {
-    return 'La sesión ha expirado. Inicie sesión nuevamente.'
-  }
-
-  if (
-    error.response.status ===
-    403
-  ) {
-    return 'Acceso no autorizado.'
-  }
-
-  if (
-    error.response.status ===
-    404
-  ) {
-    return (
-      mensaje ||
-      'La cuenta administrativa no existe.'
-    )
-  }
-
-  if (
-    error.response.status ===
-    409
-  ) {
-    return (
-      mensaje ||
-      'La operación no puede realizarse.'
-    )
-  }
-
-  return (
-    mensaje ||
-    'Ocurrió un error al procesar la solicitud.'
-  )
-}
 
 const obtenerColorEstado = (
   estado,
@@ -309,10 +212,7 @@ export default function AdministratorsPage() {
     setAdministradorSeleccionado,
   ] = useState(null)
 
-  const [
-    menuAnchor,
-    setMenuAnchor,
-  ] = useState(null)
+  
 
   const [
     confirmacionEstadoAbierta,
@@ -381,6 +281,8 @@ export default function AdministratorsPage() {
     )
 
   useEffect(() => {
+    // Synchronize the existing API query with its current filters and page.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargarAdministradores()
   }, [cargarAdministradores])
 
@@ -421,7 +323,7 @@ export default function AdministratorsPage() {
 
   const abrirDetalle =
     async (administrador) => {
-      cerrarMenu()
+      
 
       setDetalleAbierto(
         true,
@@ -500,7 +402,7 @@ export default function AdministratorsPage() {
 
   const abrirEditar =
     async (administrador) => {
-      cerrarMenu()
+      
 
       setModoFormulario(
         'editar',
@@ -770,26 +672,13 @@ export default function AdministratorsPage() {
       }
     }
 
-  const abrirMenu = (
-    event,
-    administrador,
-  ) => {
-    setMenuAnchor(
-      event.currentTarget,
-    )
+  
 
-    setAdministradorSeleccionado(
-      administrador,
-    )
-  }
-
-  const cerrarMenu = () => {
-    setMenuAnchor(null)
-  }
+  
 
   const solicitarCambioEstado =
     (administrador) => {
-      cerrarMenu()
+      
 
       setAdministradorSeleccionado(
         administrador,
@@ -869,7 +758,7 @@ export default function AdministratorsPage() {
 
   const solicitarEliminar =
     (administrador) => {
-      cerrarMenu()
+      
 
       setAdministradorSeleccionado(
         administrador,
@@ -986,66 +875,7 @@ export default function AdministratorsPage() {
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: {
-            xs:
-              'flex-start',
-            sm: 'center',
-          },
-          justifyContent:
-            'space-between',
-          flexDirection: {
-            xs: 'column',
-            sm: 'row',
-          },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <Box>
-          <Typography
-            component="h1"
-            sx={{
-              fontSize: {
-                xs: 25,
-                sm: 30,
-              },
-              fontWeight: 800,
-              color:
-                '#101828',
-            }}
-          >
-            Gestión de administradores
-          </Typography>
-
-          <Typography
-            sx={{
-              color:
-                '#667085',
-              fontSize: 15,
-              mt: 0.7,
-            }}
-          >
-            Administra las cuentas y permisos del personal administrativo.
-          </Typography>
-        </Box>
-
-        <Stack
-          direction={{
-            xs: 'column',
-            sm: 'row',
-          }}
-          spacing={1.5}
-          sx={{
-            width: {
-              xs: '100%',
-              sm: 'auto',
-            },
-          }}
-        >
-          <Button
+      <AdminPageHeader title="Gestión de administradores" description="Administra las cuentas y permisos del personal administrativo." icon={<AdminPanelSettingsOutlined />} actions={<Button
             variant="contained"
             startIcon={
               <AddOutlined />
@@ -1073,31 +903,7 @@ export default function AdministratorsPage() {
             }}
           >
             Crear Administrador
-          </Button>
-
-          <Box
-            sx={{
-              width: 52,
-              height: 52,
-              borderRadius: 2.5,
-              backgroundColor:
-                '#F0FDFA',
-              color:
-                '#0D9488',
-              display: {
-                xs: 'none',
-                sm: 'flex',
-              },
-              alignItems:
-                'center',
-              justifyContent:
-                'center',
-            }}
-          >
-            <AdminPanelSettingsOutlined />
-          </Box>
-        </Stack>
-      </Box>
+          </Button>} />
 
       {error && (
         <Alert
@@ -1108,24 +914,12 @@ export default function AdministratorsPage() {
           sx={{
             mb: 3,
           }}
-        >
+         action={<Button disabled={cargando} onClick={cargarAdministradores}>Reintentar</Button>}>
           {error}
         </Alert>
       )}
 
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          p: {
-            xs: 2,
-            sm: 3,
-          },
-          mb: 3,
-        }}
-      >
+      <AdminFilterCard>
         <Typography
           sx={{
             fontSize: 16,
@@ -1337,18 +1131,9 @@ export default function AdministratorsPage() {
             </Button>
           </Stack>
         </Box>
-      </Paper>
+      </AdminFilterCard>
 
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          overflow:
-            'hidden',
-        }}
-      >
+      <AdminTableCard>
         <Box
           sx={{
             px: {
@@ -1645,24 +1430,12 @@ export default function AdministratorsPage() {
                           />
                         </TableCell>
 
-                        <TableCell
-                          align="center"
-                        >
-                          <Tooltip title="Acciones">
-                            <IconButton
-                              onClick={(
-                                event,
-                              ) =>
-                                abrirMenu(
-                                  event,
-                                  administrador,
-                                )
-                              }
-                            >
-                              <MoreVertOutlined />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
+                        <TableCell align="center"><RowActionsMenu label={`Acciones del administrador #${administrador.id}`} actions={[
+ { label: 'Ver detalle', onClick: () => abrirDetalle(administrador) },
+ { label: 'Editar', onClick: () => abrirEditar(administrador) },
+ { label: administrador.estado === 'Activo' ? 'Desactivar' : 'Activar', disabled: esCuentaActual(administrador), onClick: () => solicitarCambioEstado(administrador) },
+ { label: 'Eliminar', destructive: true, disabled: esCuentaActual(administrador), onClick: () => solicitarEliminar(administrador) },
+ ]} /></TableCell>
                       </TableRow>
                     ),
                   )}
@@ -1704,105 +1477,11 @@ export default function AdministratorsPage() {
             />
           </>
         )}
-      </Paper>
+      </AdminTableCard>
 
-      <Menu
-        anchorEl={
-          menuAnchor
-        }
-        open={
-          Boolean(
-            menuAnchor,
-          )
-        }
-        onClose={
-          cerrarMenu
-        }
-      >
-        <MenuItem
-          onClick={() =>
-            abrirDetalle(
-              administradorSeleccionado,
-            )
-          }
-        >
-          <VisibilityOutlined
-            fontSize="small"
-            sx={{
-              mr: 1.4,
-            }}
-          />
+      
 
-          Ver detalle
-        </MenuItem>
-
-        <MenuItem
-          onClick={() =>
-            abrirEditar(
-              administradorSeleccionado,
-            )
-          }
-        >
-          <EditOutlined
-            fontSize="small"
-            sx={{
-              mr: 1.4,
-            }}
-          />
-
-          Editar
-        </MenuItem>
-
-        <MenuItem
-          onClick={() =>
-            solicitarCambioEstado(
-              administradorSeleccionado,
-            )
-          }
-          disabled={esCuentaActual(
-            administradorSeleccionado,
-          )}
-        >
-          <PersonOffOutlined
-            fontSize="small"
-            sx={{
-              mr: 1.4,
-            }}
-          />
-
-          {administradorSeleccionado
-            ?.estado ===
-          'Activo'
-            ? 'Desactivar'
-            : 'Activar'}
-        </MenuItem>
-
-        <MenuItem
-          onClick={() =>
-            solicitarEliminar(
-              administradorSeleccionado,
-            )
-          }
-          disabled={esCuentaActual(
-            administradorSeleccionado,
-          )}
-          sx={{
-            color:
-              '#D92D20',
-          }}
-        >
-          <DeleteOutlineOutlined
-            fontSize="small"
-            sx={{
-              mr: 1.4,
-            }}
-          />
-
-          Eliminar
-        </MenuItem>
-      </Menu>
-
-      <Dialog
+      <AdminDialog
         open={
           detalleAbierto
         }
@@ -1840,9 +1519,7 @@ export default function AdministratorsPage() {
             </Box>
           ) : (
             administradorDetalle && (
-              <Stack
-                spacing={2.5}
-              >
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 2.5, '& > :first-child': { gridColumn: '1 / -1' } }}>
                 <Box>
                   <Typography
                     sx={{
@@ -1990,7 +1667,7 @@ export default function AdministratorsPage() {
                     )}
                   </Typography>
                 </Box>
-              </Stack>
+              </Box>
             )
           )}
         </DialogContent>
@@ -2000,7 +1677,7 @@ export default function AdministratorsPage() {
             p: 2,
           }}
         >
-          <Button
+          <Button variant="outlined"
             onClick={
               cerrarDetalle
             }
@@ -2015,9 +1692,9 @@ export default function AdministratorsPage() {
             Cerrar
           </Button>
         </DialogActions>
-      </Dialog>
+      </AdminDialog>
 
-      <Dialog
+      <AdminDialog
         open={
           formularioAbierto
         }
@@ -2080,10 +1757,10 @@ export default function AdministratorsPage() {
                 disabled={
                   guardando
                 }
-                inputProps={{
+                slotProps={{ htmlInput: {
                   maxLength:
                     100,
-                }}
+                } }}
               />
 
               <TextField
@@ -2112,10 +1789,10 @@ export default function AdministratorsPage() {
                 disabled={
                   guardando
                 }
-                inputProps={{
+                slotProps={{ htmlInput: {
                   maxLength:
                     150,
-                }}
+                } }}
               />
 
               {modoFormulario ===
@@ -2152,7 +1829,7 @@ export default function AdministratorsPage() {
                     guardando
                   }
                   autoComplete="new-password"
-                  InputProps={{
+                  slotProps={{ input: {
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
@@ -2177,7 +1854,7 @@ export default function AdministratorsPage() {
                         </IconButton>
                       </InputAdornment>
                     ),
-                  }}
+                  } }}
                 />
               )}
 
@@ -2206,10 +1883,10 @@ export default function AdministratorsPage() {
                 disabled={
                   guardando
                 }
-                inputProps={{
+                slotProps={{ htmlInput: {
                   maxLength:
                     25,
-                }}
+                } }}
               />
 
               {modoFormulario ===
@@ -2285,7 +1962,7 @@ export default function AdministratorsPage() {
               p: 2,
             }}
           >
-            <Button
+            <Button variant="outlined"
               type="button"
               onClick={
                 cerrarFormulario
@@ -2347,138 +2024,21 @@ export default function AdministratorsPage() {
             </Button>
           </DialogActions>
         </Box>
-      </Dialog>
+      </AdminDialog>
 
-      <Dialog
-        open={
-          confirmacionEstadoAbierta
-        }
-        onClose={
-          cerrarConfirmacionEstado
-        }
-        fullWidth
-        maxWidth="xs"
-      >
-        <DialogTitle
-          sx={{
-            fontWeight: 800,
-          }}
-        >
-          {administradorSeleccionado
+      <ConfirmActionDialog open={confirmacionEstadoAbierta} title={<>{administradorSeleccionado
             ?.estado ===
           'Activo'
             ? 'Desactivar cuenta'
-            : 'Activar cuenta'}
-        </DialogTitle>
-
-        <DialogContent
-          dividers
-        >
-          <Alert
-            severity={
-              administradorSeleccionado
-                ?.estado ===
-              'Activo'
-                ? 'warning'
-                : 'info'
-            }
-          >
+            : 'Activar cuenta'}</>} busy={procesando} onClose={cerrarConfirmacionEstado} onConfirm={confirmarCambioEstado} confirmLabel={administradorSeleccionado?.estado === 'Activo' ? 'Desactivar' : 'Activar'} color={administradorSeleccionado?.estado === 'Activo' ? 'warning' : 'success'}>
             {administradorSeleccionado
               ?.estado ===
             'Activo'
               ? `¿Desea desactivar la cuenta de ${administradorSeleccionado?.nombre}? El usuario dejará de poder ingresar al Portal Administrativo.`
               : `¿Desea activar nuevamente la cuenta de ${administradorSeleccionado?.nombre}?`}
-          </Alert>
-        </DialogContent>
+          </ConfirmActionDialog>
 
-        <DialogActions
-          sx={{
-            p: 2,
-          }}
-        >
-          <Button
-            onClick={
-              cerrarConfirmacionEstado
-            }
-            disabled={
-              procesando
-            }
-            sx={{
-              textTransform:
-                'none',
-            }}
-          >
-            Cancelar
-          </Button>
-
-          <Button
-            variant="contained"
-            color={
-              administradorSeleccionado
-                ?.estado ===
-              'Activo'
-                ? 'warning'
-                : 'success'
-            }
-            onClick={
-              confirmarCambioEstado
-            }
-            disabled={
-              procesando
-            }
-            sx={{
-              minWidth: 110,
-              textTransform:
-                'none',
-              fontWeight:
-                700,
-              boxShadow:
-                'none',
-            }}
-          >
-            {procesando ? (
-              <CircularProgress
-                size={20}
-                sx={{
-                  color:
-                    '#FFFFFF',
-                }}
-              />
-            ) : administradorSeleccionado
-                ?.estado ===
-              'Activo' ? (
-              'Desactivar'
-            ) : (
-              'Activar'
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={
-          confirmacionEliminarAbierta
-        }
-        onClose={
-          cerrarConfirmacionEliminar
-        }
-        fullWidth
-        maxWidth="xs"
-      >
-        <DialogTitle
-          sx={{
-            fontWeight: 800,
-            color:
-              '#B42318',
-          }}
-        >
-          Eliminar cuenta
-        </DialogTitle>
-
-        <DialogContent
-          dividers
-        >
-          <Alert severity="error">
+      <ConfirmActionDialog open={confirmacionEliminarAbierta} title={<>Eliminar cuenta</>} busy={procesando} onClose={cerrarConfirmacionEliminar} onConfirm={confirmarEliminar} confirmLabel={'Eliminar'} color={'error'}>
             Esta acción eliminará permanentemente la cuenta administrativa de{' '}
             <strong>
               {
@@ -2486,73 +2046,7 @@ export default function AdministratorsPage() {
               }
             </strong>
             . Esta operación requiere confirmación y no puede deshacerse.
-          </Alert>
-        </DialogContent>
-
-        <DialogActions
-          sx={{
-            p: 2,
-          }}
-        >
-          <Button
-            onClick={
-              cerrarConfirmacionEliminar
-            }
-            disabled={
-              procesando
-            }
-            sx={{
-              textTransform:
-                'none',
-              fontWeight:
-                700,
-              color:
-                '#475467',
-            }}
-          >
-            Cancelar
-          </Button>
-
-          <Button
-            variant="contained"
-            color="error"
-            onClick={
-              confirmarEliminar
-            }
-            disabled={
-              procesando
-            }
-            startIcon={
-              procesando
-                ? null
-                : (
-                  <DeleteOutlineOutlined />
-                )
-            }
-            sx={{
-              minWidth: 120,
-              textTransform:
-                'none',
-              fontWeight:
-                700,
-              boxShadow:
-                'none',
-            }}
-          >
-            {procesando ? (
-              <CircularProgress
-                size={20}
-                sx={{
-                  color:
-                    '#FFFFFF',
-                }}
-              />
-            ) : (
-              'Eliminar'
-            )}
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </ConfirmActionDialog>
 
       <Snackbar
         open={

@@ -1,3 +1,4 @@
+import getApiErrorMessage from '../utils/getApiErrorMessage'
 import { useState } from 'react'
 import {
   Alert,
@@ -91,23 +92,7 @@ export default function ChangePasswordPage() {
         respuesta?.message ||
           'Contraseña actualizada correctamente.',
       )
-    } catch (err) {
-      if (err.response?.status === 400) {
-        setError(
-          err.response.data?.message ||
-            'No fue posible cambiar la contraseña.',
-        )
-      } else if (err.response?.status === 403) {
-        setError(
-          'La cuenta no tiene permiso para realizar esta operación.',
-        )
-      } else {
-        setError(
-          err.response?.data?.message ||
-            'No fue posible cambiar la contraseña.',
-        )
-      }
-    } finally {
+    } catch (err) { setError(getApiErrorMessage(err)) } finally {
       setEnviando(false)
     }
   }

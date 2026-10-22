@@ -1,3 +1,6 @@
+import AdminFilterCard from '../../components/AdminFilterCard'
+import AdminPageHeader from '../../components/AdminPageHeader'
+import obtenerMensajeError from '../../utils/getApiErrorMessage'
 import {
   useCallback,
   useEffect,
@@ -52,45 +55,7 @@ const COLORES = [
   '#16A34A',
 ]
 
-const obtenerMensajeError = (
-  error,
-) => {
-  if (!error?.response) {
-    return (
-      error?.message ||
-      'No fue posible conectar con el servidor.'
-    )
-  }
 
-  if (
-    error.response.status ===
-    401
-  ) {
-    return 'La sesión ha expirado. Inicie sesión nuevamente.'
-  }
-
-  if (
-    error.response.status ===
-    403
-  ) {
-    return 'No tiene permisos para consultar las estadísticas.'
-  }
-
-  if (
-    error.response.status ===
-    404
-  ) {
-    return 'No fue posible encontrar el recurso solicitado.'
-  }
-
-  return (
-    error.response.data
-      ?.message ||
-    error.response.data
-      ?.mensaje ||
-    'No fue posible cargar las estadísticas.'
-  )
-}
 
 const formatearFechaTexto = (
   fecha,
@@ -272,6 +237,8 @@ export default function StatisticsPage() {
     )
 
   useEffect(() => {
+    // Synchronize the existing API query with its current filters and page.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargarEstadisticas()
   }, [cargarEstadisticas])
 
@@ -624,85 +591,9 @@ export default function StatisticsPage() {
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: {
-            xs:
-              'flex-start',
-            sm: 'center',
-          },
-          justifyContent:
-            'space-between',
-          flexDirection: {
-            xs: 'column',
-            sm: 'row',
-          },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <Box>
-          <Typography
-            component="h1"
-            sx={{
-              fontSize: {
-                xs: 25,
-                sm: 30,
-              },
-              fontWeight: 800,
-              color:
-                '#101828',
-            }}
-          >
-            Estadísticas de la plataforma
-          </Typography>
+      <AdminPageHeader title="Estadísticas de la plataforma" description="Consulta indicadores generales sobre el funcionamiento de ConnectaOficios." icon={<AssessmentOutlined />}  />
 
-          <Typography
-            sx={{
-              color:
-                '#667085',
-              fontSize: 15,
-              mt: 0.7,
-            }}
-          >
-            Consulta indicadores generales sobre el funcionamiento de ConnectaOficios.
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            width: 52,
-            height: 52,
-            borderRadius: 2.5,
-            backgroundColor:
-              '#F0FDFA',
-            color:
-              '#0D9488',
-            display: 'flex',
-            alignItems:
-              'center',
-            justifyContent:
-              'center',
-          }}
-        >
-          <AssessmentOutlined />
-        </Box>
-      </Box>
-
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          p: {
-            xs: 2,
-            sm: 3,
-          },
-          mb: 3,
-        }}
-      >
+      <AdminFilterCard>
         <Typography
           sx={{
             color:
@@ -890,7 +781,7 @@ export default function StatisticsPage() {
                 },
               }}
             >
-              Aplicar período
+              Aplicar filtros
             </Button>
 
             <Button
@@ -972,7 +863,7 @@ export default function StatisticsPage() {
             </Box>
           </Typography>
         </Box>
-      </Paper>
+      </AdminFilterCard>
 
       {error && (
         <Alert
@@ -983,7 +874,7 @@ export default function StatisticsPage() {
           sx={{
             mb: 3,
           }}
-        >
+         action={<Button disabled={cargando} onClick={cargarEstadisticas}>Reintentar</Button>}>
           {error}
         </Alert>
       )}

@@ -27,6 +27,8 @@ export function AuthProvider({ children }) {
   }, [])
 
   useEffect(() => {
+    // Restore the existing session once on mount; preserve authentication behavior.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargarSesion()
   }, [cargarSesion])
 
@@ -91,6 +93,8 @@ export function AuthProvider({ children }) {
   )
 }
 
+// The existing context and hook intentionally share a module.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext)
 

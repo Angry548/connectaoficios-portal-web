@@ -1,3 +1,9 @@
+import SingleRowAction from '../../components/SingleRowAction'
+import AdminDialog from '../../components/AdminDialog'
+import AdminTableCard from '../../components/AdminTableCard'
+import AdminFilterCard from '../../components/AdminFilterCard'
+import AdminPageHeader from '../../components/AdminPageHeader'
+import obtenerMensajeError from '../../utils/getApiErrorMessage'
 import {
   useCallback,
   useEffect,
@@ -5,34 +11,7 @@ import {
   useState,
 } from 'react'
 
-import {
-  Alert,
-  Autocomplete,
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Alert, Autocomplete, Box, Button, Chip, CircularProgress, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material"
 
 import {
   FlagOutlined,
@@ -103,38 +82,7 @@ const ACCIONES = {
   },
 }
 
-const obtenerMensajeError = (
-  error,
-) => {
-  if (!error?.response) {
-    return (
-      error?.message ||
-      'No fue posible conectar con el servidor.'
-    )
-  }
 
-  if (
-    error.response.status ===
-    401
-  ) {
-    return 'La sesión ha expirado. Inicie sesión nuevamente.'
-  }
-
-  if (
-    error.response.status ===
-    403
-  ) {
-    return 'No tiene permisos para realizar esta operación.'
-  }
-
-  return (
-    error.response.data
-      ?.mensaje ||
-    error.response.data
-      ?.message ||
-    'Ocurrió un error al procesar la solicitud.'
-  )
-}
 
 const obtenerEstado = (
   estado,
@@ -421,6 +369,8 @@ export default function ReportsPage() {
     if (
       buscar.length < 2
     ) {
+      // Clear dependent suggestions when the search is below its minimum length.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setReportantesOpciones(
         [],
       )
@@ -481,6 +431,8 @@ export default function ReportsPage() {
     if (
       buscar.length < 2
     ) {
+      // Clear dependent suggestions when the search is below its minimum length.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setReportadosOpciones(
         [],
       )
@@ -541,6 +493,8 @@ export default function ReportsPage() {
     if (
       buscar.length < 2
     ) {
+      // Clear dependent suggestions when the search is below its minimum length.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setServiciosOpciones(
         [],
       )
@@ -796,6 +750,8 @@ export default function ReportsPage() {
     )
 
   useEffect(() => {
+    // Synchronize the existing API query with its current filters and page.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargarReportes()
   }, [cargarReportes])
 
@@ -1275,81 +1231,9 @@ export default function ReportsPage() {
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: {
-            xs: 'flex-start',
-            sm: 'center',
-          },
-          justifyContent:
-            'space-between',
-          flexDirection: {
-            xs: 'column',
-            sm: 'row',
-          },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <Box>
-          <Typography
-            component="h1"
-            sx={{
-              fontSize: {
-                xs: 25,
-                sm: 30,
-              },
-              fontWeight: 800,
-              color: '#101828',
-            }}
-          >
-            Gestión de reportes
-          </Typography>
+      <AdminPageHeader title="Gestión de reportes" description="Revisa y gestiona los reportes realizados por los usuarios." icon={<FlagOutlined />} iconSx={{ bgcolor: '#FFF4ED', color: '#E04F16' }}  />
 
-          <Typography
-            sx={{
-              color: '#667085',
-              fontSize: 15,
-              mt: 0.7,
-            }}
-          >
-            Revisa y gestiona los reportes realizados por los usuarios.
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            width: 52,
-            height: 52,
-            borderRadius: 2.5,
-            backgroundColor:
-              '#FFF4ED',
-            color: '#E04F16',
-            display: 'flex',
-            alignItems:
-              'center',
-            justifyContent:
-              'center',
-          }}
-        >
-          <FlagOutlined />
-        </Box>
-      </Box>
-
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          p: {
-            xs: 2,
-            sm: 3,
-          },
-          mb: 3,
-        }}
-      >
+      <AdminFilterCard>
         <Typography
           sx={{
             fontSize: 16,
@@ -1811,7 +1695,7 @@ export default function ReportsPage() {
             </Button>
           </Box>
         </Box>
-      </Paper>
+      </AdminFilterCard>
 
       {error && (
         <Alert
@@ -1822,20 +1706,12 @@ export default function ReportsPage() {
           sx={{
             mb: 3,
           }}
-        >
+         action={<Button disabled={cargando} onClick={cargarReportes}>Reintentar</Button>}>
           {error}
         </Alert>
       )}
 
-      <Paper
-        elevation={0}
-        sx={{
-          border:
-            '1px solid #EAECF0',
-          borderRadius: 3,
-          overflow: 'hidden',
-        }}
-      >
+      <AdminTableCard>
         <Box
           sx={{
             px: {
@@ -2180,31 +2056,7 @@ export default function ReportsPage() {
                             />
                           </TableCell>
 
-                          <TableCell
-                            align="center"
-                          >
-                            <Button
-                              size="small"
-                              startIcon={
-                                <VisibilityOutlined />
-                              }
-                              onClick={() =>
-                                abrirDetalle(
-                                  reporte,
-                                )
-                              }
-                              sx={{
-                                textTransform:
-                                  'none',
-                                fontWeight:
-                                  700,
-                                color:
-                                  '#0D9488',
-                              }}
-                            >
-                              Ver
-                            </Button>
-                          </TableCell>
+                          <TableCell align="center"><SingleRowAction label="Ver detalle" icon={<VisibilityOutlined />} onClick={() => abrirDetalle(reporte)} /></TableCell>
                         </TableRow>
                       )
                     },
@@ -2245,9 +2097,9 @@ export default function ReportsPage() {
             />
           </>
         )}
-      </Paper>
+      </AdminTableCard>
 
-      <Dialog
+      <AdminDialog
         open={
           detalleAbierto
         }
@@ -2771,7 +2623,7 @@ export default function ReportsPage() {
             </>
           )}
 
-          <Button
+          <Button variant="outlined"
             onClick={
               cerrarDetalle
             }
@@ -2789,9 +2641,9 @@ export default function ReportsPage() {
             Cerrar
           </Button>
         </DialogActions>
-      </Dialog>
+      </AdminDialog>
 
-      <Dialog
+      <AdminDialog
         open={
           gestionAbierta
         }
@@ -2861,10 +2713,10 @@ export default function ReportsPage() {
                     .value,
                 )
               }
-              inputProps={{
+              slotProps={{ htmlInput: {
                 maxLength:
                   2000,
-              }}
+              } }}
               helperText={`${resolucion.length}/2000`}
               disabled={
                 procesando
@@ -2975,7 +2827,7 @@ export default function ReportsPage() {
             p: 2,
           }}
         >
-          <Button
+          <Button variant="outlined"
             onClick={
               cerrarGestion
             }
@@ -3035,7 +2887,7 @@ export default function ReportsPage() {
             )}
           </Button>
         </DialogActions>
-      </Dialog>
+      </AdminDialog>
 
       <Snackbar
         open={

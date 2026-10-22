@@ -19,6 +19,9 @@ import StatisticsPage from './pages/estadisticas/StatisticsPage'
 import AdministratorsPage from './pages/administradores/AdministratorsPage'
 
 import './App.css'
+import PromotionsPage from './pages/promociones/PromotionsPage'
+import PromotionPlansPage from './pages/promociones/PromotionPlansPage'
+import ContractedPromotionsPage from './pages/promociones/ContractedPromotionsPage'
 
 export default function App() {
   return (
@@ -60,6 +63,11 @@ export default function App() {
               <ServicesPage />
             }
           />
+
+          <Route path="/promociones" element={<PromotionsPage />}>
+            <Route path="planes" element={<PromotionPlansPage />} />
+            <Route path="contratadas" element={<ContractedPromotionsPage />} />
+          </Route>
 
           <Route
             path="/reportes"
