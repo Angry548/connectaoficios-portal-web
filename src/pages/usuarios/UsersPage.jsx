@@ -1,3 +1,6 @@
+import UserIdentity from '../../components/UserIdentity'
+import AvatarNotice from '../../components/AvatarNotice'
+import useUserAvatars from '../../hooks/useUserAvatars'
 import ConfirmActionDialog from '../../components/ConfirmActionDialog'
 import AdminDialog from '../../components/AdminDialog'
 import RowActionsMenu from '../../components/RowActionsMenu'
@@ -123,6 +126,8 @@ export default function UsersPage() {
 
   const [mensaje, setMensaje] =
     useState('')
+
+  const avatars = useUserAvatars([...usuarios, usuarioDetalle])
 
   const cargarUsuarios =
     useCallback(async () => {
@@ -321,6 +326,7 @@ export default function UsersPage() {
 
   return (
     <Box>
+      <AvatarNotice avatars={avatars} />
       <AdminPageHeader title="Gestión de usuarios" description="Consulta y administra las cuentas de clientes y trabajadores registrados." icon={<PeopleAltOutlined />}  />
 
       <AdminFilterCard>
@@ -701,9 +707,7 @@ export default function UsersPage() {
                                 '#101828',
                             }}
                           >
-                            {
-                              usuario.nombre
-                            }
+                            <UserIdentity nombre={usuario.nombre} fotoUrl={avatars.fotoDe(usuario)} />
                           </Typography>
                         </TableCell>
 
@@ -860,9 +864,7 @@ export default function UsersPage() {
                         '#101828',
                     }}
                   >
-                    {
-                      usuarioDetalle.nombre
-                    }
+                    <UserIdentity nombre={usuarioDetalle.nombre} fotoUrl={avatars.fotoDe(usuarioDetalle)} />
                   </Typography>
                 </Box>
 

@@ -1,3 +1,7 @@
+import UserIdentity from '../../components/UserIdentity'
+import AvatarNotice from '../../components/AvatarNotice'
+import useUserAvatars from '../../hooks/useUserAvatars'
+import UserAvatar from '../../components/UserAvatar'
 import ConfirmActionDialog from '../../components/ConfirmActionDialog'
 import AdminDialog from '../../components/AdminDialog'
 import RowActionsMenu from '../../components/RowActionsMenu'
@@ -13,7 +17,7 @@ import {
 
 import { Alert, Box, Button, Chip, CircularProgress, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material"
 
-import { AddOutlined, AdminPanelSettingsOutlined, PersonOutlineOutlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material"
+import { AddOutlined, AdminPanelSettingsOutlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material"
 
 import adminAccountsService from '../../services/adminAccountsService'
 import { useAuth } from '../../context/AuthContext'
@@ -228,6 +232,8 @@ export default function AdministratorsPage() {
     procesando,
     setProcesando,
   ] = useState(false)
+
+  const avatars = useUserAvatars([...administradores, administradorDetalle])
 
   const cargarAdministradores =
     useCallback(
@@ -875,6 +881,7 @@ export default function AdministratorsPage() {
 
   return (
     <Box>
+      <AvatarNotice avatars={avatars} />
       <AdminPageHeader title="Gestión de administradores" description="Administra las cuentas y permisos del personal administrativo." icon={<AdminPanelSettingsOutlined />} actions={<Button
             variant="contained"
             startIcon={
@@ -1317,30 +1324,7 @@ export default function AdministratorsPage() {
                               gap: 1.4,
                             }}
                           >
-                            <Box
-                              sx={{
-                                width: 38,
-                                height: 38,
-                                borderRadius:
-                                  '50%',
-                                backgroundColor:
-                                  '#F0FDFA',
-                                color:
-                                  '#0D9488',
-                                display:
-                                  'flex',
-                                justifyContent:
-                                  'center',
-                                alignItems:
-                                  'center',
-                                flexShrink:
-                                  0,
-                              }}
-                            >
-                              <PersonOutlineOutlined
-                                fontSize="small"
-                              />
-                            </Box>
+                            <UserAvatar nombre={administrador.nombre} fotoUrl={avatars.fotoDe(administrador)} />
 
                             <Box>
                               <Typography
@@ -1545,9 +1529,7 @@ export default function AdministratorsPage() {
                       mt: 0.4,
                     }}
                   >
-                    {
-                      administradorDetalle.nombre
-                    }
+                    <UserIdentity nombre={administradorDetalle.nombre} fotoUrl={avatars.fotoDe(administradorDetalle)} />
                   </Typography>
                 </Box>
 

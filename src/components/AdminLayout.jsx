@@ -1,9 +1,11 @@
+import BrandLogo from './BrandLogo'
+import UserAvatar from './UserAvatar'
+import useUserAvatars from '../hooks/useUserAvatars'
 import {
   useState,
 } from 'react'
 
 import {
-  Avatar,
   Box,
   Divider,
   Drawer,
@@ -178,35 +180,7 @@ export default function AdminLayout() {
     )
   }
 
-  const obtenerIniciales =
-    () => {
-      const nombre =
-        usuario?.nombre?.trim()
-
-      if (!nombre) {
-        return 'AP'
-      }
-
-      const partes =
-        nombre
-          .split(' ')
-          .filter(Boolean)
-
-      if (
-        partes.length === 1
-      ) {
-        return partes[0]
-          .substring(
-            0,
-            2,
-          )
-          .toUpperCase()
-      }
-
-      return `${partes[0][0]}${partes[1][0]}`
-        .toUpperCase()
-    }
-
+  const avatars = useUserAvatars([usuario])
 
   const drawer = (
     <Box
@@ -229,50 +203,7 @@ export default function AdminLayout() {
           gap: 1.5,
         }}
       >
-        <Box
-          sx={{
-            width: 42,
-            height: 42,
-            borderRadius: 2.5,
-            backgroundColor:
-              '#0D9488',
-            color:
-              '#FFFFFF',
-            display: 'flex',
-            alignItems:
-              'center',
-            justifyContent:
-              'center',
-          }}
-        >
-          <AdminPanelSettingsOutlined />
-        </Box>
-
-        <Box>
-          <Typography
-            sx={{
-              fontWeight: 800,
-              fontSize: 18,
-              color:
-                '#101828',
-              lineHeight:
-                1.1,
-            }}
-          >
-            ConnectaOficios
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: 12,
-              color:
-                '#667085',
-              mt: 0.4,
-            }}
-          >
-            Portal administrativo
-          </Typography>
-        </Box>
+        <BrandLogo />
       </Box>
 
       <Divider />
@@ -587,18 +518,7 @@ export default function AdminLayout() {
                   p: 0,
                 }}
               >
-                <Avatar
-                  sx={{
-                    width: 42,
-                    height: 42,
-                    backgroundColor:
-                      '#0D9488',
-                    fontSize: 14,
-                    fontWeight: 700,
-                  }}
-                >
-                  {obtenerIniciales()}
-                </Avatar>
+                <UserAvatar nombre={usuario?.nombre} fotoUrl={avatars.fotoDe(usuario)} size={42} />
               </IconButton>
             </Tooltip>
 
@@ -625,6 +545,7 @@ export default function AdminLayout() {
                   'right',
               }}
             >
+              <MenuItem onClick={() => { cerrarMenuUsuario(); navigate('/mi-perfil') }}>Mi perfil</MenuItem>
               <MenuItem
                 onClick={
                   irCambiarPassword

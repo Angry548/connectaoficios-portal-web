@@ -1,3 +1,4 @@
+import BrandLogo from '../components/BrandLogo'
 import getApiErrorMessage from '../utils/getApiErrorMessage'
 import { useState } from 'react'
 
@@ -14,7 +15,6 @@ import {
 } from '@mui/material'
 
 import {
-  AdminPanelSettingsOutlined,
   LockOutlined,
   VisibilityOffOutlined,
   VisibilityOutlined,
@@ -218,11 +218,7 @@ export default function LoginPage() {
             mb: 2.5,
           }}
         >
-          <AdminPanelSettingsOutlined
-            sx={{
-              fontSize: 34,
-            }}
-          />
+          <BrandLogo compact />
         </Box>
 
         {/* TÍTULO */}
@@ -275,8 +271,9 @@ export default function LoginPage() {
           )}
 
           {/* CORREO */}
-          <Typography
+          <Typography component="label" htmlFor="login-correo"
             sx={{
+              display: 'block',
               fontSize: 14,
               fontWeight: 600,
               color: '#344054',
@@ -288,6 +285,7 @@ export default function LoginPage() {
 
           <TextField
             fullWidth
+            id="login-correo"
             type="email"
             value={correo}
             onChange={manejarCambioCorreo}
@@ -302,8 +300,9 @@ export default function LoginPage() {
           />
 
           {/* CONTRASEÑA */}
-          <Typography
+          <Typography component="label" htmlFor="login-password"
             sx={{
+              display: 'block',
               fontSize: 14,
               fontWeight: 600,
               color: '#344054',
@@ -315,6 +314,7 @@ export default function LoginPage() {
 
           <TextField
             fullWidth
+            id="login-password"
             type={
               mostrarPassword
                 ? 'text'

@@ -1,3 +1,4 @@
+import AdminProfilePage from './pages/AdminProfilePage'
 import {
   Navigate,
   Route,
@@ -95,6 +96,8 @@ export default function App() {
               }
             />
           </Route>
+
+          <Route path="/mi-perfil" element={<AdminProfilePage />} />
 
           <Route
             path="/cambiar-contrasena"

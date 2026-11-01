@@ -28,6 +28,12 @@ const theme = createTheme({
     fontFamily:
       'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
+  components: {
+    MuiButton: { defaultProps: { disableElevation: true }, styleOverrides: { root: { textTransform: 'none', fontWeight: 600, borderRadius: 8 } } },
+    MuiTableCell: { styleOverrides: { head: { backgroundColor: '#F9FAFB', color: '#667085', fontWeight: 700 }, body: { fontSize: 14, borderColor: '#EAECF0' } } },
+    MuiTablePagination: { defaultProps: { labelRowsPerPage: 'Filas por página', labelDisplayedRows: ({ from, to, count }) => from + '–' + to + ' de ' + count, getItemAriaLabel: (type) => ({ first: 'Primera página', last: 'Última página', next: 'Página siguiente', previous: 'Página anterior' })[type] }, styleOverrides: { toolbar: { flexWrap: 'wrap', rowGap: 8 } } },
+    MuiChip: { styleOverrides: { root: { fontWeight: 600 } } },
+  },
   shape: {
     borderRadius: 10,
   },

@@ -6,7 +6,7 @@ const obtenerUsuarios = async ({
   rolId = '',
   estado = '',
   page = 1,
-  pageSize = 20,
+  pageSize = 10,
 } = {}) => {
   const params = {
     page,

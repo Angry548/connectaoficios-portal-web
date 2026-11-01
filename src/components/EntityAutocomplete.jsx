@@ -1,10 +1,12 @@
+import UserAvatar from './UserAvatar'
+import useUserAvatars from '../hooks/useUserAvatars'
 import { useEffect, useState } from 'react'
 import { Autocomplete, Box, CircularProgress, TextField, Typography } from '@mui/material'
 import getApiErrorMessage from '../utils/getApiErrorMessage'
 
 const idOf = (option) => option?.id ?? option?.Id
 
-export default function EntityAutocomplete({ label, value, onChange, loadOptions, getName, getSecondary, minLength = 2, disabled }) {
+export default function EntityAutocomplete({ label, value, onChange, loadOptions, getName, getSecondary, minLength = 2, disabled, personRole }) {
   const [input, setInput] = useState('')
   const [selected, setSelected] = useState(null)
   const [result, setResult] = useState({ options: [], loading: false, error: '' })
@@ -23,6 +25,7 @@ export default function EntityAutocomplete({ label, value, onChange, loadOptions
     }, 350)
     return () => { active = false; window.clearTimeout(timer) }
   }, [query, minLength, loadOptions])
+  const avatars = useUserAvatars(personRole ? result.options.map((u) => ({ ...u, rol: personRole })) : [])
   const enough = query.length >= minLength
   return <Autocomplete
     options={enough ? result.options : []}
@@ -40,7 +43,7 @@ export default function EntityAutocomplete({ label, value, onChange, loadOptions
     noOptionsText={enough ? 'No se encontraron resultados.' : `Escriba al menos ${minLength} caracteres.`}
     renderOption={(props, option) => {
       const { key, ...rest } = props
-      return <Box component="li" key={key} {...rest}><Box><Typography fontWeight={600}>{getName(option)}</Typography>{getSecondary?.(option) && <Typography variant="caption" color="text.secondary">{getSecondary(option)}</Typography>}</Box></Box>
+      return <Box component="li" key={key} {...rest} sx={{ gap: 1.5 }}>{personRole && <UserAvatar nombre={getName(option)} fotoUrl={avatars.fotoDe({ ...option, rol: personRole })} />}<Box><Typography fontWeight={600}>{getName(option)}</Typography>{getSecondary?.(option) && <Typography variant="caption" color="text.secondary">{getSecondary(option)}</Typography>}</Box></Box>
     }}
     renderInput={(params) => <TextField {...params} label={label} error={enough && Boolean(result.error)} helperText={enough && result.error ? result.error : minLength ? `Busque por nombre (mínimo ${minLength} caracteres).` : 'Busque o seleccione una opción.'} slotProps={{ ...params.slotProps, input: { ...params.slotProps.input, endAdornment: <>{enough && result.loading && <CircularProgress size={18} aria-label="Buscando opciones" />}{params.slotProps.input.endAdornment}</> } }} />}
   />

@@ -1,3 +1,6 @@
+import UserIdentity from '../../components/UserIdentity'
+import AvatarNotice from '../../components/AvatarNotice'
+import useUserAvatars from '../../hooks/useUserAvatars'
 import ConfirmActionDialog from '../../components/ConfirmActionDialog'
 import AdminDialog from '../../components/AdminDialog'
 import RowActionsMenu from '../../components/RowActionsMenu'
@@ -373,6 +376,12 @@ export default function ServicesPage() {
       )
     }
   }, [categoriaTexto])
+
+  const avatars = useUserAvatars([
+    ...trabajadoresOpciones.map((u) => ({ ...u, rol: 'Trabajador' })),
+    ...servicios.map((s) => ({ id: s.trabajadorId, rol: 'Trabajador' })),
+    ...(servicioDetalle ? [{ id: servicioDetalle.trabajadorId, rol: 'Trabajador' }] : []),
+  ])
 
   const cargarServicios =
     useCallback(
@@ -783,6 +792,7 @@ export default function ServicesPage() {
 
   return (
     <Box>
+      <AvatarNotice avatars={avatars} />
       <AdminPageHeader title="Gestión de servicios" description="Supervisa los servicios publicados por los trabajadores." icon={<SettingsOutlined />}  />
 
       <AdminFilterCard>
@@ -842,6 +852,7 @@ export default function ServicesPage() {
               options={
                 trabajadoresOpciones
               }
+              renderOption={(props, option) => { const { key, ...rest } = props; return <Box component="li" key={key} {...rest}><UserIdentity nombre={option.nombre ?? option.Nombre} fotoUrl={avatars.fotoDe({ ...option, rol: 'Trabajador' })} /></Box> }}
               loading={
                 buscandoTrabajador
               }
@@ -1402,10 +1413,7 @@ export default function ServicesPage() {
                                   '#475467',
                               }}
                             >
-                              {servicio
-                                .trabajador
-                                ?.nombre ||
-                                `Trabajador #${servicio.trabajadorId}`}
+                              <UserIdentity nombre={servicio.trabajador?.nombre || `Trabajador #${servicio.trabajadorId}`} fotoUrl={avatars.fotoDe({ id: servicio.trabajadorId, rol: 'Trabajador' })} />
                             </Typography>
 
                             {servicio
@@ -1838,9 +1846,7 @@ export default function ServicesPage() {
                             700,
                         }}
                       >
-                        {trabajadorDetalle
-                          ?.nombre ||
-                          'No disponible'}
+                        <UserIdentity nombre={trabajadorDetalle?.nombre || `Trabajador #${servicioDetalle.trabajadorId}`} fotoUrl={avatars.fotoDe({ id: servicioDetalle.trabajadorId, rol: 'Trabajador' })} />
                       </Typography>
                     </Box>
 

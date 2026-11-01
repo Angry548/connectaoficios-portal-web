@@ -1,0 +1,9 @@
+services:
+  portal:
+    build:
+      context: .
+      args:
+        VITE_DOTNET_API_URL: ${VITE_DOTNET_API_URL:-http://localhost:8080}
+        VITE_JAVA_API_URL: ${VITE_JAVA_API_URL:-http://localhost:8081}
+    ports:
+      - "4173:80"

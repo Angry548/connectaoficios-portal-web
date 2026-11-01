@@ -1,0 +1,10 @@
+{
+  "name": "ConnectaOficios Portal",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
+  "forwardPorts": [
+    5173,
+    8080,
+    8081
+  ],
+  "postCreateCommand": "npm ci"
+}

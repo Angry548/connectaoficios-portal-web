@@ -1,3 +1,6 @@
+import UserIdentity from '../../components/UserIdentity'
+import AvatarNotice from '../../components/AvatarNotice'
+import useUserAvatars from '../../hooks/useUserAvatars'
 import SingleRowAction from '../../components/SingleRowAction'
 import AdminDialog from '../../components/AdminDialog'
 import AdminTableCard from '../../components/AdminTableCard'
@@ -546,6 +549,13 @@ export default function ReportsPage() {
         timeout,
       )
   }, [servicioTexto])
+
+  const avatars = useUserAvatars([
+    ...reportantesOpciones, ...reportadosOpciones,
+    ...reportes.flatMap((r) => [r.reportante, r.usuarioRelacionado]),
+    reportanteDetalle, usuarioRelacionadoDetalle,
+    ...(servicioDetalle?.trabajadorId ? [{ id: servicioDetalle.trabajadorId, rol: 'Trabajador' }] : []),
+  ])
 
   const enriquecerReportes =
     useCallback(
@@ -1231,6 +1241,7 @@ export default function ReportsPage() {
 
   return (
     <Box>
+      <AvatarNotice avatars={avatars} />
       <AdminPageHeader title="Gestión de reportes" description="Revisa y gestiona los reportes realizados por los usuarios." icon={<FlagOutlined />} iconSx={{ bgcolor: '#FFF4ED', color: '#E04F16' }}  />
 
       <AdminFilterCard>
@@ -1376,6 +1387,7 @@ export default function ReportsPage() {
               options={
                 reportantesOpciones
               }
+              renderOption={(props, option) => { const { key, ...rest } = props; return <Box component="li" key={key} {...rest}><UserIdentity nombre={option.nombre ?? option.Nombre} fotoUrl={avatars.fotoDe(option)} /></Box> }}
               loading={
                 buscandoReportante
               }
@@ -1459,6 +1471,7 @@ export default function ReportsPage() {
               options={
                 reportadosOpciones
               }
+              renderOption={(props, option) => { const { key, ...rest } = props; return <Box component="li" key={key} {...rest}><UserIdentity nombre={option.nombre ?? option.Nombre} fotoUrl={avatars.fotoDe(option)} /></Box> }}
               loading={
                 buscandoReportado
               }
@@ -1914,10 +1927,7 @@ export default function ReportsPage() {
                                   700,
                               }}
                             >
-                              {reporte
-                                .reportante
-                                ?.nombre ||
-                                `Usuario #${reporte.usuarioReportanteId}`}
+                              <UserIdentity nombre={reporte.reportante?.nombre || `Usuario #${reporte.usuarioReportanteId}`} fotoUrl={avatars.fotoDe(reporte.reportante)} />
                             </Typography>
 
                             <Typography
@@ -1963,16 +1973,8 @@ export default function ReportsPage() {
                                   220,
                               }}
                             >
-                              {reporte.tipo ===
-                              'SERVICIO'
-                                ? reporte
-                                    .servicioRelacionado
-                                    ?.titulo ||
-                                  `Servicio #${reporte.servicioId}`
-                                : reporte
-                                    .usuarioRelacionado
-                                    ?.nombre ||
-                                  `Usuario #${reporte.usuarioReportadoId}`}
+                              {reporte.tipo === 'SERVICIO' ? reporte.servicioRelacionado?.titulo || `Servicio #${reporte.servicioId}` :
+                                <UserIdentity nombre={reporte.usuarioRelacionado?.nombre || `Usuario #${reporte.usuarioReportadoId}`} fotoUrl={avatars.fotoDe(reporte.usuarioRelacionado)} />}
                             </Typography>
                           </TableCell>
 
@@ -2237,9 +2239,7 @@ export default function ReportsPage() {
                           700,
                       }}
                     >
-                      {reportanteDetalle
-                        ?.nombre ||
-                        `Usuario #${reporteDetalle.usuarioReportanteId}`}
+                      <UserIdentity nombre={reportanteDetalle?.nombre || `Usuario #${reporteDetalle.usuarioReportanteId}`} fotoUrl={avatars.fotoDe(reportanteDetalle)} />
                     </Typography>
 
                     {reportanteDetalle
@@ -2313,9 +2313,7 @@ export default function ReportsPage() {
                       <DatoDetalle
                         titulo="Nombre"
                       >
-                        {usuarioRelacionadoDetalle
-                          ?.nombre ||
-                          `Usuario #${reporteDetalle.usuarioReportadoId}`}
+                        <UserIdentity nombre={usuarioRelacionadoDetalle?.nombre || `Usuario #${reporteDetalle.usuarioReportadoId}`} fotoUrl={avatars.fotoDe(usuarioRelacionadoDetalle)} />
                       </DatoDetalle>
 
                       <DatoDetalle
@@ -2405,14 +2403,7 @@ export default function ReportsPage() {
                       <DatoDetalle
                         titulo="Trabajador"
                       >
-                        {servicioDetalle
-                          ?.trabajadorNombre ||
-                          (
-                            servicioDetalle
-                              ?.trabajadorId
-                              ? `Usuario #${servicioDetalle.trabajadorId}`
-                              : 'No disponible'
-                          )}
+                        <UserIdentity nombre={servicioDetalle?.trabajadorNombre || (servicioDetalle?.trabajadorId ? `Trabajador #${servicioDetalle.trabajadorId}` : 'No disponible')} fotoUrl={avatars.fotoDe({ id: servicioDetalle?.trabajadorId, rol: 'Trabajador' })} />
                       </DatoDetalle>
                     </Box>
                   </Box>

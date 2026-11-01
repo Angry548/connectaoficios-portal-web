@@ -1,5 +1,5 @@
 const networkMessage = 'No fue posible conectar con el servidor. Intente nuevamente.'
-const technicalMessage = /timeout|network error|err_network|econn\w*|request failed|axios|stack\s*trace|\bat\s+\S+\s*\(|\b(?:java|javax|org\.springframework|system)\.|exception|traceback|(?:type|reference|syntax|range)error|cannot read propert|sqlstate|jdbc|undefined|null reference|\[object object\]|[{}<>]/i
+const technicalMessage = /cloudinary|timeout|network error|err_network|econn\w*|request failed|axios|stack\s*trace|\bat\s+\S+\s*\(|\b(?:java|javax|org\.springframework|system)\.|exception|traceback|(?:type|reference|syntax|range)error|cannot read propert|sqlstate|jdbc|undefined|null reference|\[object object\]|[{}<>]/i
 
 function readable(value) {
   if (typeof value !== 'string') return ''

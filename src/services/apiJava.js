@@ -27,34 +27,6 @@ apiJava.interceptors.request.use(
     Promise.reject(error),
 )
 
-apiJava.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (
-      error.response?.status === 401
-    ) {
-      sessionStorage.removeItem(
-        'adminToken',
-      )
-
-      sessionStorage.removeItem(
-        'adminUser',
-      )
-
-      if (
-        window.location.pathname !==
-        '/login'
-      ) {
-        window.dispatchEvent(
-          new Event(
-            'admin-session-expired',
-          ),
-        )
-      }
-    }
-
-    return Promise.reject(error)
-  },
-)
-
+// Java owns secondary domain features, not the .NET session.
+// Let callers handle authorization errors without discarding identity credentials.
 export default apiJava

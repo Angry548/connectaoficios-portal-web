@@ -38,11 +38,12 @@ export function ConfirmationDialog({ action, busy, error, onClose, onConfirm }) 
   return <ConfirmActionDialog open={Boolean(action)} title={action?.title} busy={busy} error={error} onClose={onClose} onConfirm={onConfirm} confirmLabel={label} color={action?.danger ? 'error' : action?.kind === 'activar' ? 'success' : 'warning'}>{action?.message}</ConfirmActionDialog>
 }
 
-export function DetailDialog({ detail, onClose }) {
+export function DetailDialog({ detail, onClose, avatar }) {
   const colors = { Activo: 'success', Inactivo: 'default', ACTIVA: 'success', PENDIENTE: 'warning', FINALIZADA: 'default', CANCELADA: 'error' }
   return <AdminDialog open={Boolean(detail)} onClose={onClose} fullWidth maxWidth="sm"><DialogTitle>{detail?.title}</DialogTitle><DialogContent>
     {detail?.loading ? <Box sx={{ display: 'flex', justifyContent: 'center', py: 5 }}><CircularProgress aria-label="Cargando detalle" /></Box> : detail?.error ? <Alert severity="error">{detail.error}</Alert> : <>
       {detail?.warning && <Alert severity="warning" sx={{ mb: 2 }}>{detail.warning}</Alert>}
+      {avatar && <Box sx={{ mb: 2 }}>{avatar}</Box>}
       <Typography variant="subtitle2" sx={{ fontWeight: 800, mb: 2 }}>Información general</Typography>
       <Box component="dl" sx={{ m: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 2.5 }}>{detail?.fields?.map(([label, value]) => <Box key={label} sx={{ gridColumn: ['Nombre', 'Descripción'].includes(label) ? '1 / -1' : undefined }}><Typography component="dt" sx={{ fontSize: 12, color: 'text.secondary', fontWeight: 700, mb: 0.6 }}>{label}</Typography><Box component="dd" sx={{ m: 0, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', color: 'text.primary', fontWeight: label === 'Nombre' ? 800 : 500 }}>{label === 'Estado' ? <Chip size="small" label={value ?? 'No disponible'} color={colors[value] ?? 'default'} /> : value ?? '—'}</Box></Box>)}</Box>
     </>}
