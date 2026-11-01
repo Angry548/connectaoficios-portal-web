@@ -130,6 +130,14 @@ const obtenerUsuario = () => {
   }
 }
 
+const actualizarDatosPersonales = ({ nombre, correo, telefono }) => {
+  const usuario = obtenerUsuario()
+  if (!usuario) return null
+  const actualizado = { ...usuario, nombre, correo, telefono }
+  sessionStorage.setItem(USER_KEY, JSON.stringify(actualizado))
+  return actualizado
+}
+
 const obtenerSesion = () => {
   const token = obtenerToken()
   const usuario = obtenerUsuario()
@@ -176,6 +184,7 @@ const cambiarPassword = async (
 }
 
 export const authService = {
+  actualizarDatosPersonales,
   iniciarSesion,
   cerrarSesion,
   obtenerToken,

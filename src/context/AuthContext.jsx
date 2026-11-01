@@ -70,6 +70,11 @@ export function AuthProvider({ children }) {
     setUsuario(null)
   }, [])
 
+  const actualizarDatosPersonales = useCallback((datos) => {
+    const actualizado = authService.actualizarDatosPersonales(datos)
+    if (actualizado) setUsuario(actualizado)
+  }, [])
+
   const value = useMemo(
     () => ({
       usuario,
@@ -77,12 +82,14 @@ export function AuthProvider({ children }) {
       autenticado: Boolean(usuario),
       iniciarSesion,
       cerrarSesion,
+      actualizarDatosPersonales,
     }),
     [
       usuario,
       cargando,
       iniciarSesion,
       cerrarSesion,
+      actualizarDatosPersonales,
     ],
   )
 

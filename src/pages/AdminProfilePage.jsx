@@ -1,14 +1,20 @@
-import { useEffect, useState } from 'react'
-import { Alert, Box, Button, CircularProgress, Stack, TextField, Typography } from '@mui/material'
+import { useEffect, useRef, useState } from 'react'
+import { Alert, Box, Button, CircularProgress, Snackbar, Stack, TextField, Typography } from '@mui/material'
 import { useAuth } from '../context/AuthContext'
 import UserAvatar from '../components/UserAvatar'
 import AdminPageHeader from '../components/AdminPageHeader'
-import { obtenerMiUsuario, obtenerMiPerfil, subirFoto, guardarFoto } from '../services/adminProfileService'
+import { obtenerMiUsuario, obtenerMiPerfil, subirFoto, guardarFoto, guardarMisDatos } from '../services/adminProfileService'
 import { notificarFotoActualizada } from '../services/avatarService'
 import obtenerMensajeError from '../utils/getApiErrorMessage'
 
 export default function AdminProfilePage() {
-  const { usuario } = useAuth()
+  const { usuario, actualizarDatosPersonales } = useAuth()
+  const [formulario, setFormulario] = useState(() => ({ nombre: usuario.nombre || '', correo: usuario.correo || '', telefono: usuario.telefono || '' }))
+  const [errores, setErrores] = useState({})
+  const [guardandoDatos, setGuardandoDatos] = useState(false)
+  const [errorDatos, setErrorDatos] = useState('')
+  const [exito, setExito] = useState(false)
+  const enviandoDatos = useRef(false)
   const [datos, setDatos] = useState(null)
   const [perfil, setPerfil] = useState(null)
   const [cargando, setCargando] = useState(true)
@@ -26,7 +32,10 @@ export default function AdminProfilePage() {
     let activo = true
     Promise.allSettled([obtenerMiUsuario(usuario.id), obtenerMiPerfil(usuario.id)]).then(([identidad, foto]) => {
       if (!activo) return
-      if (identidad.status === 'fulfilled') setDatos(identidad.value)
+      if (identidad.status === 'fulfilled') {
+        setDatos(identidad.value)
+        setFormulario({ nombre: identidad.value.nombre || '', correo: identidad.value.correo || '', telefono: identidad.value.telefono || '' })
+      }
       else setAviso('No se pudo actualizar la información de la cuenta. Se muestran los datos de la sesión.')
       if (foto.status === 'fulfilled') { setPerfil(foto.value); setListo(true); setError('') }
       else { setListo(false); setError(obtenerMensajeError(foto.reason)) }
@@ -69,9 +78,45 @@ export default function AdminProfilePage() {
     finally { setGuardando(false) }
   }
 
+  function cambiar(campo, valor) {
+    setFormulario((actual) => ({ ...actual, [campo]: valor }))
+    setErrores((actual) => ({ ...actual, [campo]: '' }))
+    setErrorDatos('')
+  }
+
+  async function guardarDatos(event) {
+    event.preventDefault()
+    if (enviandoDatos.current || cargando) return
+    const nuevos = {}
+    const { nombre, correo, telefono } = formulario
+    if (!nombre.trim()) nuevos.nombre = 'El nombre es obligatorio.'
+    else if (nombre.trim().length > 100) nuevos.nombre = 'El nombre no puede superar los 100 caracteres.'
+    if (!correo.trim()) nuevos.correo = 'El correo electrónico es obligatorio.'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.trim())) nuevos.correo = 'Ingrese un correo electrónico válido.'
+    else if (correo.trim().length > 150) nuevos.correo = 'El correo no puede superar los 150 caracteres.'
+    if (telefono.trim().length > 25) nuevos.telefono = 'El teléfono no puede superar los 25 caracteres.'
+    setErrores(nuevos)
+    setErrorDatos(''); setExito(false)
+    if (Object.keys(nuevos).length) return
+    enviandoDatos.current = true
+    setGuardandoDatos(true)
+    try {
+      const actualizado = await guardarMisDatos(formulario)
+      actualizarDatosPersonales(actualizado)
+      setDatos(actualizado)
+      setFormulario({ nombre: actualizado.nombre, correo: actualizado.correo, telefono: actualizado.telefono || '' })
+      setExito(true)
+    } catch (err) {
+      setErrorDatos(err.response?.status === 409 ? 'Este correo electrónico ya está registrado.' : obtenerMensajeError(err))
+    } finally {
+      enviandoDatos.current = false
+      setGuardandoDatos(false)
+    }
+  }
+
   const identidad = datos || usuario
   return <Box>
-    <AdminPageHeader title="Mi perfil" description="Consulta tu cuenta y actualiza tu fotografía." />
+    <AdminPageHeader title="Mi perfil" description="Actualiza tus datos personales y tu fotografía." />
     {aviso && <Alert severity="warning" sx={{ mb: 2 }}>{aviso}</Alert>}
     {error && <Alert severity="error" sx={{ mb: 2 }} action={!listo && <Button disabled={guardando} onClick={() => { setCargando(true); setRevision((n) => n + 1) }}>Reintentar</Button>}>{error}</Alert>}
     {mensaje && <Alert severity="success" sx={{ mb: 2 }}>{mensaje}</Alert>}
@@ -93,10 +138,24 @@ export default function AdminProfilePage() {
         </Box>
       </Stack>
       {cargando && <CircularProgress size={24} aria-label="Cargando perfil" />}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-        {[['Nombre', identidad.nombre], ['Correo', identidad.correo], ['Teléfono', identidad.telefono], ['Rol', identidad.rol], ['ID de usuario', identidad.id], ['Estado', identidad.estado]].map(([label, value]) =>
-          <TextField key={label} label={label} value={value ?? ''} slotProps={{ input: { readOnly: true } }} />)}
+      <Box component="form" noValidate onSubmit={guardarDatos}>
+        {errorDatos && <Alert severity="error" sx={{ mb: 2 }}>{errorDatos}</Alert>}
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+          {[['nombre', 'Nombre', 'text', 'name'], ['correo', 'Correo electrónico', 'email', 'email'], ['telefono', 'Teléfono', 'tel', 'tel']].map(([campo, label, type, autoComplete]) =>
+            <TextField key={campo} label={label} type={type} autoComplete={autoComplete} required={campo !== 'telefono'}
+              value={formulario[campo]} onChange={(event) => cambiar(campo, event.target.value)}
+              disabled={cargando || guardandoDatos} error={Boolean(errores[campo])} helperText={errores[campo]} />)}
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+          <Button type="submit" variant="contained" disabled={cargando || guardandoDatos}
+            startIcon={guardandoDatos ? <CircularProgress size={18} color="inherit" /> : null}>
+            {guardandoDatos ? 'Guardando…' : 'Guardar cambios'}
+          </Button>
+        </Box>
       </Box>
     </Box>
+    <Snackbar open={exito} autoHideDuration={6000} onClose={() => setExito(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+      <Alert severity="success" variant="filled" onClose={() => setExito(false)}>Perfil actualizado correctamente.</Alert>
+    </Snackbar>
   </Box>
 }

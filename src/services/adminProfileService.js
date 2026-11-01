@@ -3,6 +3,12 @@ import apiDotNet from './apiDotNet'
 
 export const obtenerMiUsuario = async (id) => (await apiDotNet.get(`/api/users/${id}`)).data
 
+export async function guardarMisDatos({ nombre, correo, telefono }) {
+  return (await apiDotNet.put('/api/users/me', {
+    nombre: nombre.trim(), correo: correo.trim(), telefono: telefono.trim(),
+  })).data.user
+}
+
 export async function obtenerMiPerfil(id) {
   try { return (await apiJava.get(`/api/perfiles-administrador/administrador/${id}`)).data }
   catch (error) {
