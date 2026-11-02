@@ -2020,7 +2020,7 @@ export default function AdministratorsPage() {
               : `¿Desea activar nuevamente la cuenta de ${administradorSeleccionado?.nombre}?`}
           </ConfirmActionDialog>
 
-      <ConfirmActionDialog open={confirmacionEliminarAbierta} title={<>Eliminar cuenta</>} busy={procesando} onClose={cerrarConfirmacionEliminar} onConfirm={confirmarEliminar} confirmLabel={'Eliminar'} color={'error'}>
+      <ConfirmActionDialog open={confirmacionEliminarAbierta} title={<>Eliminar cuenta</>} busy={procesando} error={error} onClose={cerrarConfirmacionEliminar} onConfirm={confirmarEliminar} confirmLabel={'Eliminar'} color={'error'}>
             Esta acción eliminará permanentemente la cuenta administrativa de{' '}
             <strong>
               {

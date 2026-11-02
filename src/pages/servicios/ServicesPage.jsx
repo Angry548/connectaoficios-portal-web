@@ -601,6 +601,12 @@ export default function ServicesPage() {
               servicio.id,
             )
 
+        if (!detalle) {
+          setDetalleAbierto(false)
+          setError('No se encontró el servicio.')
+          return
+        }
+
         setServicioDetalle(
           detalle,
         )

@@ -30,3 +30,5 @@ playwright-report/
 test-results/
 screenshots/
 *.token
+tests/e2e/local.secrets.json
+tests/e2e/.local/
